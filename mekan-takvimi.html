@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SKS | Mekan Takvimi</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        /* MASTER SIDEBAR VE ANA YAPI - REFERANS SAYFADAN %100 AYNI */
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+        }
+
+        .sidebar {
+            width: 280px;
+            background-color: #152238;
+            color: white;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid rgba(0,0,0,0.1);
+            position: fixed;
+            height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .profile-section { text-align: center; margin-bottom: 40px; }
+        .profile-img { 
+            width: 70px; height: 70px; background: #ff453a; 
+            border-radius: 50%; margin: 0 auto 15px;
+            display: flex; align-items: center; justify-content: center; font-weight: 800;
+        }
+        
+        .menu { display: flex; flex-direction: column; }
+        .menu-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 15px; color: rgba(255,255,255,0.6);
+            text-decoration: none; border-radius: 12px; margin-bottom: 8px;
+            transition: 0.3s;
+        }
+        .menu-item.active { background: rgba(255,255,255,0.1); color: white; font-weight: 600; }
+        .menu-item:hover:not(.active) { background: rgba(255,255,255,0.05); color: white; }
+
+        .sidebar-footer { margin-top: auto; }
+        .logout-btn { 
+            width: 100%; padding: 12px; background: rgba(255,255,255,0.05); 
+            border: 1px solid rgba(255,255,255,0.1); color: white; 
+            border-radius: 10px; cursor: pointer; transition: 0.3s;
+        }
+        .logout-btn:hover { background: rgba(255,255,255,0.1); }
+
+        /* MEKAN TAKVİMİ İÇERİK ALANI (SAĞ TARAF) */
+        .main-content {
+            margin-left: 280px;
+            flex: 1;
+            padding: 50px 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f8f9fa;
+            transition: margin-right 0.3s ease;
+        }
+
+        .selector-container { margin-bottom: 30px; width: 100%; max-width: 500px; }
+        #venueSelect {
+            width: 100%; padding: 15px 20px; background: white;
+            border: 1px solid #e2e8f0; border-radius: 15px;
+            color: #1a2a44; font-size: 1rem; outline: none; cursor: pointer; font-weight: 600;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+        }
+        
+        .capacity-info {
+            margin-top: 15px; padding: 12px 20px; background: #f0fdf4;
+            border-left: 4px solid #16a34a; border-radius: 8px;
+            font-size: 0.9rem; color: #15803d; display: flex; align-items: center; gap: 10px;
+        }
+
+        .nav-header {
+            display: flex; align-items: center; justify-content: space-between;
+            width: 100%; max-width: 500px; margin-bottom: 15px;
+        }
+        .month-name { font-size: 2.2rem; font-weight: 800; color: #1a2a44; margin: 0; }
+        .nav-btn {
+            background: white; border: 1px solid #e2e8f0; color: #1a2a44;
+            width: 45px; height: 45px; border-radius: 50%; cursor: pointer; transition: 0.2s;
+            display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
+        }
+        .nav-btn:hover { background: #f1f5f9; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+
+        /* Akademik Bilgilendirme Etiketi */
+        .academic-legend {
+            margin-bottom: 20px; font-size: 0.8rem; color: #64748b; font-weight: 600;
+            display: flex; gap: 15px; justify-content: center;
+        }
+        .legend-item { display: flex; align-items: center; gap: 6px; }
+        .dot-red { width: 10px; height: 10px; background: #ff453a; border-radius: 50%; }
+        .ring-blue { width: 10px; height: 10px; border: 2px solid #3b82f6; border-radius: 50%; }
+
+        .calendar-card {
+            background: white; padding: 35px; border-radius: 35px;
+            width: 100%; max-width: 500px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #edf2f7;
+        }
+        .week-days {
+            display: grid; grid-template-columns: repeat(7, 1fr);
+            text-align: center; color: #ff453a; font-weight: 700;
+            font-size: 0.8rem; margin-bottom: 25px;
+        }
+        .days-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 12px; text-align: center; }
+        
+        .day-box {
+            aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem; border-radius: 50%; cursor: pointer; color: #475569; transition: 0.2s;
+            border: 2px solid transparent;
+            box-sizing: border-box;
+        }
+        .day-box:hover:not(.empty):not(.active-red) { background: #f1f5f9; }
+        
+        /* Kırmızı Dolgulu: Etkinlik Var / Meşgul Günler */
+        .active-red {
+            background-color: #ff453a !important; color: white; font-weight: 800;
+            box-shadow: 0 6px 12px rgba(255, 69, 58, 0.2);
+        }
+        
+        /* Mavi Yuvarlak Kenarlık - Akademik Final Sınav Dönemi */
+        .academic-blue {
+            border: 2px solid #3b82f6 !important;
+            font-weight: 600;
+            color: #1e40af;
+        }
+        /* Hem final hem etkinlik varsa rengin okunabilirliğini koru */
+        .active-red.academic-blue {
+            color: white;
+        }
+
+        .day-box.empty { color: #cbd5e1; cursor: default; background: transparent !important; border-color: transparent !important; }
+
+        /* DETAYLI SAATLİK YAN PANELİ */
+        .side-panel {
+            position: fixed;
+            top: 0; right: -380px;
+            width: 380px; height: 100vh;
+            background-color: white;
+            box-shadow: -5px 0 30px rgba(0,0,0,0.1);
+            border-left: 1px solid #e2e8f0;
+            transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 40px 30px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+        .side-panel.open { right: 0; }
+
+        .panel-close-btn {
+            position: absolute; top: 35px; right: 30px;
+            background: #f1f5f9; border: none; width: 35px; height: 35px;
+            border-radius: 50%; cursor: pointer; font-weight: bold; color: #475569;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .panel-close-btn:hover { background: #e2e8f0; }
+
+        .panel-title { color: #152238; font-size: 1.4rem; font-weight: 800; margin-bottom: 5px; margin-top: 10px; }
+        .panel-date { color: #ff453a; font-weight: 700; font-size: 0.95rem; margin-bottom: 30px; }
+
+        .timeline { display: flex; flex-direction: column; gap: 15px; overflow-y: auto; flex: 1; padding-right: 5px; }
+        .time-slot {
+            display: flex; border-left: 4px solid #e2e8f0; padding: 12px 15px;
+            background: #f8fafc; border-radius: 0 12px 12px 0; gap: 15px; align-items: center;
+        }
+        .time-slot.busy { border-left-color: #ff453a; background: #fff5f5; }
+        .time-slot.academic-notice { border-left-color: #3b82f6; background: #eff6ff; }
+        
+        .slot-time { font-weight: 800; color: #1a2a44; font-size: 0.85rem; min-width: 80px; }
+        .slot-details { display: flex; flex-direction: column; }
+        .slot-title { font-weight: 600; color: #152238; font-size: 0.9rem; }
+        .slot-club { font-size: 0.75rem; color: #64748b; margin-top: 2px; }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="profile-section">
+            <div class="profile-img">HK</div>
+            <h4>Hümeyra Kocaağaoğlu</h4>
+            <p style="font-size: 0.8rem; color: rgba(255,255,255,0.4);">030422014</p>
+        </div>
+        <nav class="menu">
+            <a href="dashboard.html" class="menu-item">Ana Sayfa</a>
+            <a href="yeni-basvuru.html" class="menu-item">Yeni Başvuru</a>
+            <a href="mekan-takvimi.html" class="menu-item active">Mekan Takvimi</a>
+            <a href="gecmis-etkinlikler.html" class="menu-item">Geçmiş Etkinlikler</a>
+            <a href="bildirimler.html" class="menu-item">Bildirimler</a>
+        </nav>
+        <div class="sidebar-footer">
+            <button class="logout-btn">Güvenli Çıkış</button>
+        </div>
+    </aside>
+
+    <main class="main-content" id="mainContent">
+        <div class="selector-container">
+            <select id="venueSelect" onchange="updateVenue()">
+                <option value="AE114">(Konferans Salonu) AE114</option>
+                <option value="AE115">(Konferans Salonu) AE115</option>
+                <option value="BZ08">BZ08</option>
+                <option value="BZ09">BZ09</option>
+            </select>
+            <div id="capacityBox" class="capacity-info">
+                <span>👥</span> <span id="capacityText">Seçtiğiniz mekan 120 kişilik kontenjana sahiptir.</span>
+            </div>
+        </div>
+
+        <div class="nav-header">
+            <button class="nav-btn" onclick="changeMonth(-1)">❮</button>
+            <h1 class="month-name" id="monthTitle">Yükleniyor...</h1>
+            <button class="nav-btn" onclick="changeMonth(1)">❯</button>
+        </div>
+
+        <div class="academic-legend">
+            <div class="legend-item"><span class="dot-red"></span> Kulüp Etkinliği / Dolu</div>
+            <div class="legend-item"><span class="ring-blue"></span> Final Sınav Dönemi (Akademik)</div>
+        </div>
+
+        <div class="calendar-card">
+            <div class="week-days">
+                <span>PZT</span><span>SAL</span><span>ÇAR</span><span>PER</span><span>CUM</span><span>CMT</span><span>PAZ</span>
+            </div>
+            <div class="days-grid" id="calendarBody"></div>
+        </div>
+    </main>
+
+    <div id="detailPanel" class="side-panel">
+        <button class="panel-close-btn" onclick="closePanel()">✕</button>
+        <h3 id="panelVenueTitle" style="margin: 0; color: #64748b; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px;">AE114</h3>
+        <h2 class="panel-title">Günlük Program</h2>
+        <div class="panel-date" id="panelDateText">Tarih</div>
+        
+        <div class="timeline" id="timelineBody"></div>
+    </div>
+
+    <script>
+        let viewDate = new Date(); 
+        
+        // Haziran ayı (indeks 5) akademik takvim sınavları
+        const academicCalendar = {
+            5: { 
+                start: 3,
+                end: 16,
+                title: "📝 Bahar Dönemi Final Sınavları"
+            }
+        };
+
+        // YENİ: Her aya dinamik ve dengeli test etkinlikleri eklendi
+        const venueData = {
+            "AE114": { 
+                capacity: 120, 
+                events: {
+                    // Ocak (Indeks 0)
+                    0: {
+                        10: [{ time: "10:00 - 12:00", title: "Ocak Ayı Sektör Buluşmaları", club: "Yönetim Bilişim Sistemleri Kulübü" }],
+                        22: [{ time: "14:00 - 16:30", title: "Python ile Veri Analizi Giriş", club: "Yazılım ve Bilişim Kulübü" }]
+                    },
+                    // Şubat (Indeks 1)
+                    1: {
+                        14: [{ time: "13:00 - 15:00", title: "Girişimcilik 101 Paneli", club: "Girişimcilik ve İnovasyon Topluluğu" }],
+                        25: [{ time: "15:00 - 17:00", title: "NextGen Gelecek Teknolojileri", club: "NextGen Kulübü" }]
+                    },
+                    // Mart (Indeks 2)
+                    2: { 
+                        11: [{ time: "10:00 - 12:00", title: "Algoritma Eğitimi", club: "Yazılım Kulübü" }],
+                        12: [
+                            { time: "09:00 - 12:00", title: "Kariyer Oturumu", club: "Yönetim Bilişim Sistemleri" },
+                            { time: "14:00 - 16:30", title: "Yapay Zeka Söyleşileri", club: "IEEE Topluluğu" }
+                        ],
+                        28: [{ time: "15:00 - 17:00", title: "Fikir ve Aksiyon Çalıştayı", club: "Fikir ve Aksiyon Kulübü" }]
+                    },
+                    // Nisan (Indeks 3)
+                    3: {
+                        8: [{ time: "11:00 - 13:00", title: "E-Ticaret Zirvesi '26", club: "Yönetim Bilişim Sistemleri Kulübü" }],
+                        18: [{ time: "14:00 - 16:00", title: "Siber Güvenlik Seminerleri", club: "Yazılım ve Bilişim Kulübü" }]
+                    },
+                    // Mayıs (Indeks 4)
+                    4: {
+                        5: [{ time: "10:00 - 12:00", title: "Bilişim Günleri Zirvesi", club: "YBS Kulübü" }],
+                        19: [{ time: "13:30 - 16:00", title: "Gençlik Paneli", club: "Fikir ve Aksiyon Kulübü" }]
+                    },
+                    // Haziran (Indeks 5)
+                    5: { 
+                        5: [{ time: "10:00 - 13:00", title: "Yıl Sonu Proje Sergisi", club: "Mühendislik Topluluğu" }],
+                        15: [
+                            { time: "11:00 - 13:00", title: "Mezuniyet Kürsüsü Söyleşileri", club: "Kariyer Kulübü" },
+                            { time: "15:00 - 17:30", title: "Blokzincir ve Web3 Atölyesi", club: "Yazılım Kulübü" }
+                        ]
+                    }
+                }
+            },
+            "AE115": { 
+                capacity: 120, 
+                events: {
+                    2: {
+                        20: [{ time: "11:00 - 13:00", title: "CV Hazırlama Teknikleri", club: "Kariyer Topluluğu" }]
+                    },
+                    5: { 
+                        8: [{ time: "10:30 - 12:30", title: "Girişimcilik ve Yatırımcılık Paneli", club: "Girişimcilik Kulübü" }]
+                    }
+                }
+            },
+            "BZ08": { 
+                capacity: 60, 
+                events: {
+                    2: {
+                        5: [{ time: "16:00 - 18:00", title: "Tiyatro Metin Okumaları", club: "Tiyatro Topluluğu" }]
+                    }
+                }
+            },
+            "BZ09": { 
+                capacity: 45, 
+                events: {
+                    5: { 
+                        10: [{ time: "18:00 - 20:30", title: "Yıl Sonu Kampüs Konseri Provaları", club: "Müzik Kulübü" }]
+                    }
+                }
+            }
+        };
+
+        const months = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
+
+        function updateVenue() {
+            const val = document.getElementById('venueSelect').value;
+            const text = document.getElementById('capacityText');
+            text.innerText = `Seçtiğiniz mekan ${venueData[val].capacity} kişilik kontenjana sahiptir.`;
+            closePanel();
+            drawCalendar();
+        }
+
+        function drawCalendar() {
+            const body = document.getElementById('calendarBody');
+            const title = document.getElementById('monthTitle');
+            const selectedVenue = document.getElementById('venueSelect').value;
+            
+            body.innerHTML = '';
+            const year = viewDate.getFullYear();
+            const month = viewDate.getMonth();
+            title.innerText = `${months[month]} ${year}`;
+
+            let firstDay = new Date(year, month, 1).getDay();
+            firstDay = (firstDay === 0) ? 6 : firstDay - 1;
+
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const prevMonthDays = new Date(year, month, 0).getDate();
+
+            for(let i = firstDay; i > 0; i--) {
+                const d = document.createElement('div');
+                d.className = 'day-box empty';
+                d.innerText = prevMonthDays - i + 1;
+                body.appendChild(d);
+            }
+
+            const currentMonthEvents = (venueData[selectedVenue].events && venueData[selectedVenue].events[month]) ? venueData[selectedVenue].events[month] : null;
+            const academicPeriod = academicCalendar[month];
+
+            for(let i = 1; i <= daysInMonth; i++) {
+                const d = document.createElement('div');
+                d.className = 'day-box';
+                d.innerText = i;
+                
+                let isBusy = currentMonthEvents && currentMonthEvents[i] && currentMonthEvents[i].length > 0;
+                let isAcademic = academicPeriod && i >= academicPeriod.start && i <= academicPeriod.end;
+
+                // Varsayılan hover yazısı
+                d.title = "Detayları görmek için tıklayınız";
+
+                // Akademik Dönem Boyama (Mavi Çerçeve)
+                if(isAcademic) {
+                    d.classList.add('academic-blue');
+                    d.title = `${academicPeriod.title} - Detayları görmek için tıklayınız`;
+                }
+
+                // DÜZELTME: Sadece gerçekten kulüp etkinliği (isBusy) varsa KIRMIZI dolgu (active-red) eklenir
+                if(isBusy) {
+                    d.classList.add('active-red');
+                }
+
+                // Tıklama Dinamiği Kontrolü
+                if(isBusy || isAcademic) {
+                    d.onclick = () => openPanel(i, selectedVenue);
+                } else {
+                    d.onclick = () => closePanel();
+                }
+                
+                body.appendChild(d);
+            }
+        }
+
+        function openPanel(day, venueKey) {
+            const panel = document.getElementById('detailPanel');
+            const mainContent = document.getElementById('mainContent');
+            const selectElement = document.getElementById('venueSelect');
+            const month = viewDate.getMonth();
+            
+            document.getElementById('panelVenueTitle').innerText = selectElement.options[selectElement.selectedIndex].text;
+            document.getElementById('panelDateText').innerText = `${day} ${months[month]} ${viewDate.getFullYear()}`;
+            
+            const timelineBody = document.getElementById('timelineBody');
+            timelineBody.innerHTML = '';
+
+            const academicPeriod = academicCalendar[month];
+            if(academicPeriod && day >= academicPeriod.start && day <= academicPeriod.end) {
+                const notice = document.createElement('div');
+                notice.className = 'time-slot academic-notice';
+                notice.innerHTML = `
+                    <div class="slot-time">⚠️ TÜM GÜN</div>
+                    <div class="slot-details">
+                        <div class="slot-title" style="color: #1e40af;">${academicPeriod.title}</div>
+                        <div class="slot-club">Lütfen sınav sessizliği kurallarına uyunuz.</div>
+                    </div>
+                `;
+                timelineBody.appendChild(notice);
+            }
+
+            const dayEvents = (venueData[venueKey].events && venueData[venueKey].events[month] && venueData[venueKey].events[month][day]) ? venueData[venueKey].events[month][day] : [];
+            
+            if(dayEvents.length > 0) {
+                dayEvents.forEach(ev => {
+                    const slot = document.createElement('div');
+                    slot.className = 'time-slot busy';
+                    slot.innerHTML = `
+                        <div class="slot-time">⏰ ${ev.time}</div>
+                        <div class="slot-details">
+                            <div class="slot-title">${ev.title}</div>
+                            <div class="slot-club">👥 ${ev.club}</div>
+                        </div>
+                    `;
+                    timelineBody.appendChild(slot);
+                });
+            } else if (!(academicPeriod && day >= academicPeriod.start && day <= academicPeriod.end)) {
+                timelineBody.innerHTML = '<div style="color: #64748b; font-size: 0.9rem; text-align: center; margin-top: 20px;">Bu gün için program bulunamadı.</div>';
+            }
+
+            panel.classList.add('open');
+            if(window.innerWidth > 1024) {
+                mainContent.style.marginRight = "380px";
+            }
+        }
+
+        function closePanel() {
+            document.getElementById('detailPanel').classList.remove('open');
+            document.getElementById('mainContent').style.marginRight = "0";
+        }
+
+        function changeMonth(n) {
+            viewDate.setMonth(viewDate.getMonth() + n);
+            closePanel();
+            drawCalendar();
+        }
+        
+        drawCalendar();
+    </script>
+</body>
+</html>

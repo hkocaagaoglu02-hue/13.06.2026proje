@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SKS | Başvuru Tamamlandı</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        /* MASTER SIDEBAR VE ANA YAPI AYARLARI */
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+        }
+
+        .sidebar {
+            width: 280px;
+            background-color: #152238;
+            color: white;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid rgba(0,0,0,0.1);
+            position: fixed;
+            height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .profile-section { text-align: center; margin-bottom: 40px; }
+        .profile-img { 
+            width: 70px; height: 70px; background: #ff453a; 
+            border-radius: 50%; margin: 0 auto 15px;
+            display: flex; align-items: center; justify-content: center; font-weight: 800;
+        }
+
+        .menu-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 15px; color: rgba(255,255,255,0.6);
+            text-decoration: none; border-radius: 12px; margin-bottom: 8px;
+            transition: 0.3s;
+        }
+        .menu-item:hover { background: rgba(255,255,255,0.05); color: white; }
+
+        .main-content {
+            margin-left: 280px;
+            flex: 1;
+            padding: 50px 80px;
+            background-color: #f8f9fa;
+        }
+
+        .sidebar-footer { margin-top: auto; }
+        .logout-btn { 
+            width: 100%; padding: 12px; background: rgba(255,255,255,0.05); 
+            border: 1px solid rgba(255,255,255,0.1); color: white; 
+            border-radius: 10px; cursor: pointer;
+        }
+
+        /* ONAY SAYFASI ÖZEL İÇERİK ALANI */
+        .success-content-area {
+            display: flex;
+            flex-direction: column;
+            justify-content: center; 
+            align-items: center;     
+            min-height: 70vh; 
+        }
+
+        .success-card {
+            background: white;
+            padding: 60px 40px;
+            border-radius: 24px;
+            text-align: center;
+            box-shadow: 0 4px 25px rgba(0,0,0,0.05);
+            max-width: 500px;
+            width: 100%;
+            border: 1px solid #edf2f7;
+            animation: fadeInScale 0.4s ease-out;
+        }
+
+        @keyframes fadeInScale {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .success-icon { 
+            font-size: 70px; 
+            margin-bottom: 20px; 
+            display: block; 
+        }
+
+        .success-card h2 { 
+            color: #1a2a44; 
+            margin-bottom: 15px; 
+            font-size: 1.6rem;
+            font-weight: 800;
+        }
+
+        .success-card p { 
+            color: #64748b; 
+            margin-bottom: 30px; 
+            line-height: 1.6;
+        }
+
+        .button-group { 
+            display: flex; 
+            gap: 15px; 
+            justify-content: center; 
+        }
+
+        .btn { padding: 12px 25px; border-radius: 10px; font-weight: 600; cursor: pointer; border: none; transition: 0.3s; text-decoration: none; }
+        .btn-primary { background: #152238; color: white; }
+        .btn-secondary { background: #e2e8f0; color: #475569; }
+        .btn:hover { opacity: 0.9; }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="profile-section">
+            <div class="profile-img">HK</div>
+            <h4>Hümeyra Kocaağaoğlu</h4>
+            <p style="font-size: 0.8rem; color: rgba(255,255,255,0.4);">030422014</p>
+        </div>
+        <nav class="menu">
+            <a href="dashboard.html" class="menu-item">Ana Sayfa</a>
+            <a href="yeni-basvuru.html" class="menu-item">Yeni Başvuru</a>
+            <a href="mekan-takvimi.html" class="menu-item">Mekan Takvimi</a>
+            <a href="gecmis-etkinlikler.html" class="menu-item">Geçmiş Etkinlikler</a>
+            <a href="bildirimler.html" class="menu-item">Bildirimler</a>
+        </nav>
+        <div class="sidebar-footer">
+            <button class="logout-btn">Güvenli Çıkış</button>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <div class="success-content-area">
+            <div class="success-card">
+                <span class="success-icon">✅</span>
+                <h2>Başvurunuz Onay Sürecine Alınmıştır</h2>
+                <p>
+                    Etkinlik talebiniz başarıyla kaydedildi. <br>
+                    Onay sürecini <strong>"Ana Sayfa"</strong> üzerindeki tablodan takip edebilirsiniz.
+                </p>
+                
+                <div class="button-group">
+                    <a href="yeni-basvuru.html" class="btn btn-primary">Yeni Başvuru Yap</a>
+                    <a href="dashboard.html" class="btn btn-secondary">Panele Dön</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

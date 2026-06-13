@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SKS | Kulüp Yönetimi</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        /* MASTER SIDEBAR VE ANA YAPI - %100 TUTARLI */
+        body { margin: 0; font-family: 'Inter', sans-serif; display: flex; min-height: 100vh; background-color: #f8f9fa; }
+        .sidebar { width: 280px; background-color: #0f172a; color: white; padding: 40px 20px; display: flex; flex-direction: column; border-right: 1px solid rgba(0,0,0,0.1); position: fixed; height: 100vh; box-sizing: border-box; z-index: 90; }
+        .profile-section { text-align: center; margin-bottom: 40px; }
+        .profile-img { width: 70px; height: 70px; background: #10b981; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-weight: 800; }
+        .menu-item { display: flex; align-items: center; gap: 12px; padding: 15px; color: rgba(255,255,255,0.6); text-decoration: none; border-radius: 12px; margin-bottom: 8px; transition: 0.3s; }
+        .menu-item.active { background: rgba(16, 185, 129, 0.2); color: #34d399; font-weight: 600; }
+        .menu-item:hover:not(.active) { background: rgba(255,255,255,0.05); color: white; }
+        .main-content { margin-left: 280px; flex: 1; padding: 50px 80px; background-color: #f8f9fa; box-sizing: border-box; }
+        .sidebar-footer { margin-top: auto; }
+        .logout-btn { width: 100%; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 10px; cursor: pointer; }
+
+        /* KULÜP DASHBOARD KURUMSUR STİLLERİ */
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 35px; }
+        .add-btn { background: #10b981; color: white; padding: 12px 24px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 8px; font-size: 0.85rem; }
+        .add-btn:hover { background: #059669; }
+
+        /* Kart Yapısı */
+        .club-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 25px; width: 100%; }
+        .club-card { background: white; border-radius: 20px; border: 1px solid #edf2f7; overflow: hidden; transition: 0.2s; display: flex; flex-direction: column; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
+        .club-card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.04); }
+        
+        /* Kart Üst Alanı / Logo Alanı */
+        .club-banner { height: 120px; background: linear-gradient(135deg, #1e293b, #0f172a); position: relative; display: flex; align-items: center; padding: 0 20px; }
+        .club-avatar { width: 65px; height: 65px; border-radius: 16px; border: 4px solid white; background: white; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: center; font-weight: 800; color: #0f172a; font-size: 1.4rem; }
+        
+        /* Kategori Badge Çeşitleri */
+        .cat-badge { position: absolute; top: 15px; right: 15px; padding: 6px 12px; border-radius: 8px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        .cat-teknoloji { background: rgba(59, 130, 246, 0.15); color: #3b82f6; }
+        .cat-sanat { background: rgba(219, 39, 119, 0.15); color: #db2777; }
+        .cat-spor { background: rgba(22, 163, 74, 0.15); color: #16a34a; }
+        .cat-sosyal { background: rgba(234, 88, 12, 0.15); color: #ea580c; }
+
+        /* Kart İçeriği */
+        .club-body { padding: 25px; flex: 1; display: flex; flex-direction: column; }
+        .club-body h3 { margin: 0 0 8px 0; color: #0f172a; font-size: 1.2rem; font-weight: 700; }
+        .club-info-row { display: flex; flex-direction: column; gap: 8px; margin: 15px 0; font-size: 0.88rem; color: #64748b; }
+        .club-info-item { display: flex; align-items: center; gap: 6px; }
+        .club-info-item strong { color: #475569; }
+
+        /* Bütçe Alanı */
+        .club-budget-tag { background: #f1f5f9; padding: 8px 14px; border-radius: 10px; font-size: 0.85rem; font-weight: 700; color: #1e293b; display: inline-flex; align-items: center; gap: 6px; margin-top: auto; width: fit-content; }
+
+        /* Kart Altı Butonlar */
+        .club-footer { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 15px 25px; border-top: 1px solid #edf2f7; background: #f8fafc; }
+        .btn-club-action { padding: 10px; border-radius: 10px; border: 1px solid #e2e8f0; background: white; font-size: 0.82rem; font-weight: 700; cursor: pointer; transition: 0.2s; color: #475569; font-family: inherit; }
+        .btn-club-action:hover { background: #f1f5f9; color: #0f172a; border-color: #cbd5e1; }
+
+        /* =========================================
+           KULÜP TANIMLA / ETKİNLİK / YÖNET YAN PANELLERİ
+           ========================================= */
+        .side-panel {
+            position: fixed;
+            top: 0; right: -520px;
+            width: 500px; height: 100vh;
+            background-color: white;
+            box-shadow: -15px 0 40px rgba(0,0,0,0.08);
+            border-left: 1px solid #e2e8f0;
+            transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 40px 30px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            z-index: 200;
+        }
+        .side-panel.open { right: 0; }
+
+        .panel-close-btn {
+            position: absolute; top: 35px; right: 30px;
+            background: #f1f5f9; border: none; width: 35px; height: 35px;
+            border-radius: 50%; cursor: pointer; font-weight: bold; color: #475569;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .panel-close-btn:hover { background: #e2e8f0; }
+
+        .panel-title { color: #0f172a; font-size: 1.5rem; font-weight: 800; margin-bottom: 5px; margin-top: 10px; }
+        .panel-subtitle { color: #64748b; font-size: 0.9rem; margin-bottom: 25px; }
+
+        /* Form Elemanları ve Bölüm Başlıkları */
+        .form-section-divider { font-size: 0.8rem; font-weight: 800; color: #10b981; text-transform: uppercase; letter-spacing: 1px; margin: 25px 0 15px 0; padding-bottom: 5px; border-bottom: 1px dashed #e2e8f0; display: flex; align-items: center; gap: 6px; }
+        .form-section-divider:first-of-type { margin-top: 0; }
+
+        .form-group { margin-bottom: 16px; display: flex; flex-direction: column; gap: 6px; }
+        .form-group label { font-size: 0.78rem; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.5px; }
+        .form-control {
+            width: 100%; padding: 12px 14px; background: #f8fafc;
+            border: 1px solid #e2e8f0; border-radius: 10px;
+            color: #0f172a; font-size: 0.9rem; outline: none; transition: 0.2s; box-sizing: border-box; font-family: inherit;
+        }
+        .form-control:focus { border-color: #10b981; background: white; box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.08); }
+        
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        
+        .submit-btn {
+            background: #10b981; color: white; padding: 14px; border: none;
+            border-radius: 12px; font-weight: 700; font-size: 0.9rem; cursor: pointer;
+            transition: 0.2s; margin-top: 20px; margin-bottom: 10px; font-family: inherit;
+        }
+        .submit-btn:hover { background: #059669; }
+
+        /* Etkinlik Listesi İçin Özel Stiller */
+        .panel-event-list { display: flex; flex-direction: column; gap: 12px; margin-top: 15px; }
+        .panel-event-item { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .event-status { padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; }
+        .status-onayli { background: #dcfce7; color: #15803d; }
+        .status-bekleyen { background: #fef3c7; color: #b45309; }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="profile-section">
+            <div class="profile-img">GT</div>
+            <h4>Gürhan Toktaş</h4>
+            <p style="font-size: 0.8rem; color: rgba(255,255,255,0.4);">SKS Daire Bşk.</p>
+        </div>
+        <nav class="menu">
+            <a href="sks1.html" class="menu-item">Genel Bakış</a>
+            <a href="sks2.html" class="menu-item">Heyet Onayları</a>
+            <a href="sks4.html" class="menu-item">Mekan Yönetimi</a>
+            <a href="sks6.html" class="menu-item active">Kulüp Yönetimi</a>
+            <a href="sks5.html" class="menu-item">Raporlar</a>
+        </nav>
+        <div class="sidebar-footer">
+            <button class="logout-btn">Güvenli Çıkış</button>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="page-header">
+            <div>
+                <h2 style="margin:0; font-size: 1.5rem; color: #0f172a; font-weight: 800;">Kulüp Yönetimi</h2>
+                <p style="margin:5px 0 0; color: #64748b; font-size: 0.9rem;">Aktif öğrenci topluluklarını, yönetim kurullarını ve bütçelerini tek ekrandan kontrol edin.</p>
+            </div>
+            <button class="add-btn" onclick="openPanel('addClubPanel')">+ Yeni Kulüp Tanımla</button>
+        </header>
+
+        <section class="club-grid" id="clubGrid">
+            
+            <div class="club-card">
+                <div class="club-banner">
+                    <div class="club-avatar">YBS</div>
+                    <span class="cat-badge cat-teknoloji">TEKNOLOJİ</span>
+                </div>
+                <div class="club-body">
+                    <h3>Yönetim Bilişim Sistemleri</h3>
+                    <div class="club-info-row">
+                        <div class="club-info-item">🎓 <strong>Danışman:</strong> Doç. Dr. Ahmet Yılmaz</div>
+                        <div class="club-info-item">👤 <strong>Başkan:</strong> Alperen Demir</div>
+                    </div>
+                    <div class="club-budget-tag">💰 Bütçe: 45.000 ₺</div>
+                </div>
+                <div class="club-footer">
+                    <button class="btn-club-action" onclick="openEventsPanel('Yönetim Bilişim Sistemleri')">📅 Etkinlikler</button>
+                    <button class="btn-club-action" onclick="openManagePanel('Yönetim Bilişim Sistemleri', '45.000', 'Doç. Dr. Ahmet Yılmaz', 'Alperen Demir')">⚙️ Yönet</button>
+                </div>
+            </div>
+
+            <div class="club-card">
+                <div class="club-banner">
+                    <div class="club-avatar">TİY</div>
+                    <span class="cat-badge cat-sanat">SANAT</span>
+                </div>
+                <div class="club-body">
+                    <h3>Tiyatro Topluluğu</h3>
+                    <div class="club-info-row">
+                        <div class="club-info-item">🎓 <strong>Danışman:</strong> Dr. Öğr. Üyesi Elif Kaya</div>
+                        <div class="club-info-item">👤 <strong>Başkan:</strong> Zeynep Aksoy</div>
+                    </div>
+                    <div class="club-budget-tag">💰 Bütçe: 30.000 ₺</div>
+                </div>
+                <div class="club-footer">
+                    <button class="btn-club-action" onclick="openEventsPanel('Tiyatro Topluluğu')">📅 Etkinlikler</button>
+                    <button class="btn-club-action" onclick="openManagePanel('Tiyatro Topluluğu', '30.000', 'Dr. Öğr. Üyesi Elif Kaya', 'Zeynep Aksoy')">⚙️ Yönet</button>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <div id="addClubPanel" class="side-panel">
+        <button class="panel-close-btn" onclick="closePanel('addClubPanel')">✕</button>
+        <h2 class="panel-title">Yeni Kulüp Tanımla</h2>
+        <p class="panel-subtitle">Sisteme dahil olacak topluluğun idari kurullarını ve bütçesini tanımlayın.</p>
+        
+        <form id="newClubForm" onsubmit="saveClub(event)" style="display: flex; flex-direction: column; overflow-y: auto; flex: 1; padding-right: 5px;">
+            <div class="form-section-divider">📌 Genel Bilgiler</div>
+            <div class="form-group">
+                <label for="cName">Kulüp / Topluluk Adı</label>
+                <input type="text" id="cName" class="form-control" placeholder="Örn: Yapay Zeka ve Veri Bilimi Kulübü" required>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="cCategory">Kategori</label>
+                    <select id="cCategory" class="form-control" required>
+                        <option value="teknoloji">Teknoloji</option>
+                        <option value="sanat">Sanat</option>
+                        <option value="spor">Spor</option>
+                        <option value="sosyal">Sosyal / Kültür</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="cBudget">Yıllık Tahsis Bütçe (₺)</label>
+                    <input type="number" id="cBudget" class="form-control" placeholder="Örn: 25000" min="0" required>
+                </div>
+            </div>
+            <div class="form-section-divider">🎓 Akademik Kadro & İletişim</div>
+            <div class="form-group">
+                <label for="cAdvisor">Kulüp Danışman Hocası</label>
+                <input type="text" id="cAdvisor" class="form-control" placeholder="Unvan, Ad Soyad" required>
+            </div>
+            <div class="form-group">
+                <label for="cMail">Danışman E-Posta</label>
+                <input type="email" id="cMail" class="form-control" placeholder="hoca@universite.edu.tr" required>
+            </div>
+            <div class="form-section-divider">👥 Yönetim Kurulu</div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="cPresident">Kulüp Başkanı</label>
+                    <input type="text" id="cPresident" class="form-control" placeholder="Ad Soyad" required>
+                </div>
+                <div class="form-group">
+                    <label for="cVicePresident">Başkan Yardımcısı</label>
+                    <input type="text" id="cVicePresident" class="form-control" placeholder="Ad Soyad" required>
+                </div>
+            </div>
+            <button type="submit" class="submit-btn">💾 Kulübü Sisteme Kaydet</button>
+        </form>
+    </div>
+
+    <div id="clubEventsPanel" class="side-panel">
+        <button class="panel-close-btn" onclick="closePanel('clubEventsPanel')">✕</button>
+        <h2 class="panel-title" id="eventPanelTitle">Kulüp Etkinlikleri</h2>
+        <p class="panel-subtitle">Topluluğun bu dönem düzenlediği veya onay bekleyen tüm faaliyetleri.</p>
+        
+        <div style="overflow-y: auto; flex: 1; padding-right: 5px;">
+            <div class="form-section-divider">📅 Dönem İçi Faaliyetler</div>
+            <div class="panel-event-list" id="panelEventList">
+                </div>
+        </div>
+    </div>
+
+    <div id="clubManagePanel" class="side-panel">
+        <button class="panel-close-btn" onclick="closePanel('clubManagePanel')">✕</button>
+        <h2 class="panel-title" id="managePanelTitle">Kulübü Yönet</h2>
+        <p class="panel-subtitle">Mevcut topluluğun bütçe revizyonunu ve idari değişikliklerini yapın.</p>
+        
+        <form onsubmit="updateClub(event)" style="display: flex; flex-direction: column; overflow-y: auto; flex: 1; padding-right: 5px;">
+            <div class="form-section-divider">💰 Finansal Ayarlar</div>
+            <div class="form-group">
+                <label>Güncel Tahsis Bütçe (₺)</label>
+                <input type="text" id="mBudget" class="form-control" required>
+            </div>
+            
+            <div class="form-section-divider">🛡️ İdari Kadro Değişikliği</div>
+            <div class="form-group">
+                <label>Akademik Danışman</label>
+                <input type="text" id="mAdvisor" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>Kulüp Başkanı</label>
+                <input type="text" id="mPresident" class="form-control" required>
+            </div>
+            
+            <button type="submit" class="submit-btn" style="background: #0f172a;">⚡ Değişiklikleri Uygula</button>
+        </form>
+    </div>
+
+    <script>
+        // Genel Panel Açma / Kapatma Fonksiyonları
+        function openPanel(panelId) {
+            // Açık olan diğer panelleri kapatmak için koruma
+            closePanel('addClubPanel');
+            closePanel('clubEventsPanel');
+            closePanel('clubManagePanel');
+            document.getElementById(panelId).classList.add('open');
+        }
+
+        function closePanel(panelId) {
+            document.getElementById(panelId).classList.remove('open');
+        }
+
+        // 📅 Etkinlikler Butonu Tetikleyicisi
+        function openEventsPanel(clubName) {
+            document.getElementById('eventPanelTitle').innerText = clubName + " | Etkinlikler";
+            const eventListContainer = document.getElementById('panelEventList');
+            
+            // Simüle edilmiş dinamik etkinlik verileri
+            if (clubName.includes("Bilişim")) {
+                eventListContainer.innerHTML = `
+                    <div class="panel-event-item">
+                        <div>
+                            <h4 style="margin:0 0 5px 0; color:#0f172a;">YBS Kariyer Zirvesi '25</h4>
+                            <small style="color:#64748b;">📅 12 Aralık 2026</small>
+                        </div>
+                        <span class="event-status status-onayli">Onaylandı</span>
+                    </div>
+                    <div class="panel-event-item">
+                        <div>
+                            <h4 style="margin:0 0 5px 0; color:#0f172a;">Algoritma Kampı v2</h4>
+                            <small style="color:#64748b;">📅 28 Hazıran 2026</small>
+                        </div>
+                        <span class="event-status status-bekleyen">Onay Bekliyor</span>
+                    </div>
+                `;
+            } else {
+                eventListContainer.innerHTML = `
+                    <div class="panel-event-item">
+                        <div>
+                            <h4 style="margin:0 0 5px 0; color:#0f172a;">Yıl Sonu Sahne Gösterimi</h4>
+                            <small style="color:#64748b;">📅 02 Hazıran 2026</small>
+                        </div>
+                        <span class="event-status status-onayli">Onaylandı</span>
+                    </div>
+                `;
+            }
+            openPanel('clubEventsPanel');
+        }
+
+        // ⚙️ Yönet Butonu Tetikleyicisi (Verileri panele doldurur)
+        function openManagePanel(name, budget, advisor, president) {
+            document.getElementById('managePanelTitle').innerText = name + " | Yönetim";
+            document.getElementById('mBudget').value = budget.replace(" ₺", "").trim();
+            document.getElementById('mAdvisor').value = advisor;
+            document.getElementById('mPresident').value = president;
+            openPanel('clubManagePanel');
+        }
+
+        // Yönetim Kaydetme İşlemi (Simülasyon)
+        function updateClub(event) {
+            event.preventDefault();
+            alert("Kulüp idari bilgileri ve bütçe planlaması başarıyla güncellendi!");
+            closePanel('clubManagePanel');
+        }
+
+        // Yeni Kulüp Sisteme Ekleme İşlemi
+        function saveClub(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('cName').value;
+            const category = document.getElementById('cCategory').value;
+            const budget = document.getElementById('cBudget').value;
+            const advisor = document.getElementById('cAdvisor').value;
+            const president = document.getElementById('cPresident').value;
+
+            let catClass = 'cat-sosyal';
+            let catText = 'SOSYAL / KÜLTÜR';
+            
+            if(category === 'teknoloji') { catClass = 'cat-teknoloji'; catText = 'TEKNOLOJİ'; } 
+            else if(category === 'sanat') { catClass = 'cat-sanat'; catText = 'SANAT'; } 
+            else if(category === 'spor') { catClass = 'cat-spor'; catText = 'SPOR'; }
+
+            const initials = name.split(' ').map(word => word[0]).join('').substring(0, 3).toUpperCase();
+            const formattedBudget = Number(budget).toLocaleString('tr-TR');
+
+            const grid = document.getElementById('clubGrid');
+            const newCard = document.createElement('div');
+            newCard.className = 'club-card';
+            newCard.innerHTML = `
+                <div class="club-banner">
+                    <div class="club-avatar">${initials}</div>
+                    <span class="cat-badge ${catClass}">${catText}</span>
+                </div>
+                <div class="club-body">
+                    <h3>${name}</h3>
+                    <div class="club-info-row">
+                        <div class="club-info-item">🎓 <strong>Danışman:</strong> ${advisor}</div>
+                        <div class="club-info-item">👤 <strong>Başkan:</strong> ${president}</div>
+                    </div>
+                    <div class="club-budget-tag">💰 Bütçe: ${formattedBudget} ₺</div>
+                </div>
+                <div class="club-footer">
+                    <button class="btn-club-action" onclick="openEventsPanel('${name}')">📅 Etkinlikler</button>
+                    <button class="btn-club-action" onclick="openManagePanel('${name}', '${formattedBudget}', '${advisor}', '${president}')">⚙️ Yönet</button>
+                </div>
+            `;
+
+            grid.insertBefore(newCard, grid.firstChild);
+            document.getElementById('newClubForm').reset();
+            closePanel('addClubPanel');
+        }
+    </script>
+</body>
+</html>

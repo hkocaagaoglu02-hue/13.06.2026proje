@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SKS | Bekleyen Onaylar</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        /* MASTER SIDEBAR VE ANA YAPI AYARLARI - İLK SAYFAYLA %100 AYNI */
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+        }
+
+        .sidebar {
+            width: 280px;
+            background-color: #0f172a; 
+            color: white;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid rgba(0,0,0,0.1);
+            position: fixed;
+            height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .profile-section { text-align: center; margin-bottom: 40px; }
+        .profile-img { 
+            width: 70px; height: 70px; 
+            background: #3b82f6; 
+            border-radius: 50%; margin: 0 auto 15px;
+            display: flex; align-items: center; justify-content: center; font-weight: 800;
+        }
+
+        .menu-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 15px; color: rgba(255,255,255,0.6);
+            text-decoration: none; border-radius: 12px; margin-bottom: 8px;
+            transition: 0.3s;
+        }
+        
+        .menu-item.active { background: rgba(59, 130, 246, 0.2); color: #60a5fa; font-weight: 600; }
+        .menu-item:hover:not(.active) { background: rgba(255,255,255,0.05); color: white; }
+
+        .main-content {
+            margin-left: 280px;
+            flex: 1;
+            padding: 50px 80px;
+            background-color: #f8f9fa;
+        }
+
+        .sidebar-footer { margin-top: auto; }
+        .logout-btn { 
+            width: 100%; padding: 12px; background: rgba(255,255,255,0.05); 
+            border: 1px solid rgba(255,255,255,0.1); color: white; 
+            border-radius: 10px; cursor: pointer;
+        }
+
+        /* İÇERİK ALANI ÖZEL STİLLERİ (TABLO VE KARTLAR) */
+        .header-title h2 { color: #0f172a; font-size: 2rem; font-weight: 800; margin-bottom: 10px; }
+        
+        .table-section { 
+            background: white; 
+            padding: 25px; 
+            border-radius: 20px; 
+            margin-bottom: 20px; 
+            border: 1px solid #edf2f7; 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.04); 
+        }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th { text-align: left; padding: 15px; border-bottom: 2px solid #f1f5f9; color: #64748b; font-size: 0.85rem; }
+        td { padding: 15px; border-bottom: 1px solid #f1f5f9; font-size: 0.95rem; color: #1e293b; }
+        
+        .badge { padding: 5px 10px; border-radius: 8px; font-size: 0.8rem; font-weight: 600; }
+        .badge-warning { background: #fff7ed; color: #c2410c; }
+        
+        .btn-action { 
+            display: inline-block;
+            text-decoration: none;
+            padding: 8px 15px; 
+            border-radius: 8px; 
+            border: none; 
+            font-weight: 600; 
+            cursor: pointer; 
+            font-size: 0.85rem;
+            transition: 0.3s;
+        }
+        .btn-detail { background: #f1f5f9; color: #475569; }
+        .btn-detail:hover { background: #e2e8f0; }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="profile-section">
+            <div class="profile-img">YA</div>
+            <h4>Dr. Yunus Adıgüzel</h4>
+            <p style="font-size: 0.8rem; color: rgba(255,255,255,0.4);">Akademik Danışman</p>
+        </div>
+        <nav class="menu">
+            <a href="akedemikdanisman1.html" class="menu-item">Panel Özeti</a>
+            <a href="akademikdanisman2.html" class="menu-item active">Bekleyen Onaylar</a>
+            <a href="akademikdanisman4.html" class="menu-item">Onaylanan Etkinlikler</a>
+            <a href="akademikdanisman5.html" class="menu-item">Sorumlu Kulüplerim</a>
+        </nav>
+        <div class="sidebar-footer">
+            <button class="logout-btn">Güvenli Çıkış</button>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="content-header">
+            <div class="header-title">
+                <h2>Bekleyen Onaylar</h2>
+                <p>Değerlendirilmeyi bekleyen güncel etkinlik talepleri ve başvuru detayları.</p>
+            </div>
+        </header>
+
+        <section class="table-section">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Başvuran</th>
+                        <th>Etkinlik Adı</th>
+                        <th>Tarih</th>
+                        <th>Durum</th>
+                        <th>İşlem</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><b>Hümeyra K.</b></td>
+                        <td>Kariyer Zirvesi '24</td>
+                        <td>24.05.2026</td>
+                        <td><span class="badge badge-warning">Onay Bekliyor</span></td>
+                        <td><a href="akademikdanisman3.html" class="btn-action btn-detail">İncele</a></td>
+                    </tr>
+                    <tr>
+                        <td><b>İremnur Ş.</b></td>
+                        <td>Tiyatro Gösterimi</td>
+                        <td>02.06.2026</td>
+                        <td><span class="badge badge-warning">Onay Bekliyor</span></td>
+                        <td><a href="akademikdanisman3.html" class="btn-action btn-detail">İncele</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+</body>
+</html>

@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SKS Panel | Öğrenci Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        /* MASTER SIDEBAR VE ANA YAPI AYARLARI */
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+        }
+
+        .sidebar {
+            width: 280px;
+            background-color: #152238;
+            color: white;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid rgba(0,0,0,0.1);
+            position: fixed;
+            height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .profile-section { text-align: center; margin-bottom: 40px; }
+        .profile-img { 
+            width: 70px; height: 70px; background: #ff453a; 
+            border-radius: 50%; margin: 0 auto 15px;
+            display: flex; align-items: center; justify-content: center; font-weight: 800;
+        }
+
+        .menu-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 15px; color: rgba(255,255,255,0.6);
+            text-decoration: none; border-radius: 12px; margin-bottom: 8px;
+            transition: 0.3s;
+        }
+        .menu-item.active { background: rgba(255,255,255,0.1); color: white; font-weight: 600; }
+        .menu-item:hover:not(.active) { background: rgba(255,255,255,0.05); color: white; }
+
+        .main-content {
+            margin-left: 280px;
+            flex: 1;
+            padding: 50px 80px;
+            background-color: #f8f9fa;
+        }
+
+        .sidebar-footer { margin-top: auto; }
+        .logout-btn { 
+            width: 100%; padding: 12px; background: rgba(255,255,255,0.05); 
+            border: 1px solid rgba(255,255,255,0.1); color: white; 
+            border-radius: 10px; cursor: pointer;
+        }
+
+        /* DASHBOARD DÜZENİ */
+        .dashboard-top-section {
+            display: flex;
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .stats-grid { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 20px; 
+            flex: 3;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            user-select: none;
+        }
+        .stat-card:hover { 
+            transform: translateY(-4px); 
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+        
+        /* Aktif kart efekti (Seçildiğini belli etmek için) */
+        .stat-card.selected {
+            background: #f1f5f9;
+            transform: translateY(-2px);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        /* Renkli Kenarlıklar */
+        .card-blue { border-left: 5px solid #3b82f6; }
+        .card-green { border-left: 5px solid #15803d; }
+        .card-orange { border-left: 5px solid #f59e0b; }
+
+        .stat-card h3 { color: #64748b; font-size: 0.85rem; margin: 0; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        .stat-card .value { font-size: 1.8rem; font-weight: 800; color: #1a2a44; margin-top: 5px; }
+        .stat-card small { color: #16a34a; font-weight: 600; margin-top: 5px; }
+
+        /* HIZLI İŞLEMLER PANELİ */
+        .quick-actions-panel {
+            flex: 1.2;
+            background: #1a2a44;
+            border-radius: 15px;
+            padding: 18px;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(21, 34, 56, 0.15);
+        }
+        .quick-actions-panel h4 { margin: 0 0 5px 0; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; color: rgba(255,255,255,0.7); }
+        .action-btn {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 10px 14px; background: rgba(255,255,255,0.08);
+            color: white; text-decoration: none; border-radius: 8px;
+            font-size: 0.85rem; font-weight: 600; transition: 0.2s;
+        }
+        .action-btn:hover { background: rgba(255,255,255,0.15); transform: translateX(3px); }
+
+        /* TABLO ALANI */
+        .table-card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); border: 1px solid #edf2f7; }
+        .data-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .data-table th { text-align: left; padding: 12px; color: #64748b; border-bottom: 1px solid #edf2f7; font-size: 0.9rem; }
+        .data-table td { padding: 15px 12px; border-bottom: 1px solid #edf2f7; color: #1a2a44; font-size: 0.95rem; }
+        
+        .status { padding: 6px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: 600; display: inline-block; text-align: center; width: 90px; }
+        .pending { background: #fef9c3; color: #854d0e; }
+        .approved { background: #dcfce7; color: #15803d; }
+        .rejected { background: #fee2e2; color: #b91c1c; }
+
+        .step-indicator {
+            font-size: 0.8rem; color: #475569; background: #f1f5f9; padding: 4px 10px; border-radius: 20px; font-weight: 600;
+        }
+
+        /* Satır Geçiş Efekti (Filtreleme esnasında yumuşak gizlenme için) */
+        .data-table tbody tr {
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="profile-section">
+            <div class="profile-img">HK</div>
+            <h4>Hümeyra Kocaağaoğlu</h4>
+            <p style="font-size: 0.8rem; color: rgba(255,255,255,0.4);">030422014</p>
+        </div>
+        <nav class="menu">
+            <a href="dashboard.html" class="menu-item active">Ana Sayfa</a>
+            <a href="yeni-basvuru.html" class="menu-item">Yeni Başvuru</a>
+            <a href="mekan-takvimi.html" class="menu-item">Mekan Takvimi</a>
+            <a href="gecmis-etkinlikler.html" class="menu-item">Geçmiş Etkinlikler</a>
+            <a href="bildirimler.html" class="menu-item">Bildirimler</a>
+        </nav>
+        <div class="sidebar-footer">
+            <button class="logout-btn">Güvenli Çıkış</button>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="content-header" style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div class="header-title">
+                <h2 style="color: #1a2a44; font-size: 2rem; font-weight: 800; margin: 0;">Hoş Geldin, Hümeyra</h2>
+                <p style="color: #64748b; margin-top: 5px;">SKS Yönetim Bilgi Sistemi üzerinden taleplerini yönetebilirsin.</p>
+            </div>
+            
+            <div class="header-date" id="live-date" style="color: #64748b; font-weight: 600; font-size: 0.95rem; background: white; padding: 8px 15px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); border: 1px solid #edf2f7;">
+                Yükleniyor...
+            </div>
+        </header>
+
+        <section class="dashboard-top-section">
+            <div class="stats-grid">
+                <div class="stat-card card-orange" id="btn-show-pending" title="Sadece İncelemedekileri Göster">
+                    <h3>Aktif Başvurular</h3>
+                    <div class="value">2</div>
+                </div>
+                <div class="stat-card card-blue" id="btn-show-approved" title="Sadece Onaylananları Göster">
+                    <h3>Onaylanan Talepler</h3>
+                    <div class="value">12</div>
+                </div>
+                <div class="stat-card card-green" title="Sürdürülebilirlik Detayı">
+                    <h3>Kurtarılan Kağıt Miktarı</h3>
+                    <div class="value">4.250 Adet</div>
+                    <small>☘️ Kampüste 14 Ağaç Kurtarıldı</small>
+                </div>
+            </div>
+
+            <div class="quick-actions-panel">
+                <h4>Hızlı İşlemler</h4>
+                <a href="yeni-basvuru.html" class="action-btn">🚀 Yeni İzin Başvurusu <span>➔</span></a>
+                <a href="mekan-takvimi.html" class="action-btn">🏛️ Uygun Mekan Ara <span>➔</span></a>
+                <a href="bildirimler.html" class="action-btn">🔔 Bildirimleri Kontrol Et <span>➔</span></a>
+            </div>
+        </section>
+
+        <section class="request-section">
+            <div class="table-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <h3 id="table-title" style="margin: 0; color: #1a2a44; font-weight: 800;">Son Başvurularım</h3>
+                    <a href="#" id="btn-show-all" style="color: #3b82f6; text-decoration: none; font-weight: 600; font-size: 0.9rem;">Tümünü Gör</a>
+                </div>
+                
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Başvuru Türü</th>
+                            <th>Başvuru Tarihi</th>
+                            <th>Güncel Aşama</th>
+                            <th>Durum</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                        <tr data-status="pending">
+                            <td>Öğrenci Topluluğu Etkinlik İzni</td>
+                            <td>28.03.2026</td>
+                            <td><span class="step-indicator">⏳ 1/3: Akademik Danışman</span></td>
+                            <td><span class="status pending">İncelemede</span></td>
+                        </tr>
+                        <tr data-status="approved">
+                            <td>Konferans Salonu Rezervasyonu</td>
+                            <td>20.03.2026</td>
+                            <td><span class="step-indicator">✅ 3/3: SKS Daire Başkanlığı</span></td>
+                            <td><span class="status approved">Onaylandı</span></td>
+                        </tr>
+                        <tr data-status="rejected">
+                            <td>Ses Sistemi ve Projeksiyon Talebi</td>
+                            <td>15.03.2026</td>
+                            <td><span class="step-indicator">❌ 2/3: İdari Kurul</span></td>
+                            <td><span class="status rejected">Reddedildi</span></td>
+                        </tr>
+                        <tr data-status="approved">
+                            <td>Açık Alan Stant Kurulum İzni</td>
+                            <td>12.03.2026</td>
+                            <td><span class="step-indicator">✅ 3/3: SKS Daire Başkanlığı</span></td>
+                            <td><span class="status approved">Onaylandı</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // --- 1. BÖLÜM: CANLI TARİH VE SAAT FONKSİYONU ---
+        function guncelTarihSaatGoster() {
+            const zaman = new Date();
+            
+            // Tarih formatı (Örn: 2 Haziran 2026)
+            const tarihSecenekleri = { year: 'numeric', month: 'long', day: 'numeric' };
+            const formatliTarih = zaman.toLocaleDateString('tr-TR', tarihSecenekleri);
+            
+            // Saat formatı (Örn: 14:15)
+            const formatliSaat = zaman.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+            
+            // Ekrana şık bir şekilde yazdırıyoruz
+            document.getElementById('live-date').innerHTML = `📅 ${formatliTarih} &nbsp;|&nbsp; 🕒 ${formatliSaat}`;
+        }
+
+        // Sayfa açıldığında hemen çalıştır and ardından her 60 saniyede bir güncelle
+        guncelTarihSaatGoster();
+        setInterval(guncelTarihSaatGoster, 60000);
+
+
+        // --- 2. BÖLÜM: İNTERAKTİF FİLTRELEME MANTIĞI ---
+        const btnPending = document.getElementById('btn-show-pending');
+        const btnApproved = document.getElementById('btn-show-approved');
+        const btnAll = document.getElementById('btn-show-all');
+        const tableTitle = document.getElementById('table-title');
+        const rows = document.querySelectorAll('#table-body tr');
+        const cards = document.querySelectorAll('.stat-card');
+
+        function clearSelection() {
+            cards.forEach(card => card.classList.remove('selected'));
+        }
+
+        function filterTable(status, titleText, activeCard) {
+            clearSelection();
+            activeCard.classList.add('selected');
+            tableTitle.textContent = titleText;
+            
+            rows.forEach(row => {
+                if (row.getAttribute('data-status') === status) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        btnPending.addEventListener('click', () => {
+            filterTable('pending', 'Aktif / İncelemedeki Başvurularım', btnPending);
+        });
+
+        btnApproved.addEventListener('click', () => {
+            filterTable('approved', 'Onaylanan Başvurularım', btnApproved);
+        });
+
+        btnAll.addEventListener('click', (e) => {
+            e.preventDefault();
+            clearSelection();
+            tableTitle.textContent = 'Son Başvurularım';
+            rows.forEach(row => row.style.display = '');
+        });
+    </script>
+</body>
+</html>

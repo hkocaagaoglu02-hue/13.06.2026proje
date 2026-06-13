@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SKS Panel | Akademik Danışman Paneli</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        /* MASTER SIDEBAR VE ANA YAPI AYARLARI */
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+        }
+
+        .sidebar {
+            width: 280px;
+            background-color: #0f172a; /* Öğrenci paneli ile %100 aynı koyu lacivert */
+            color: white;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid rgba(0,0,0,0.1);
+            position: fixed;
+            height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .profile-section { text-align: center; margin-bottom: 40px; }
+        .profile-img { 
+            width: 70px; height: 70px; background: #3b82f6; /* Hoca paneli için mavi profil ikonu */
+            border-radius: 50%; margin: 0 auto 15px;
+            display: flex; align-items: center; justify-content: center; font-weight: 800;
+        }
+
+        .menu-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 15px; color: rgba(255,255,255,0.6);
+            text-decoration: none; border-radius: 12px; margin-bottom: 8px;
+            transition: 0.3s;
+        }
+        .menu-item.active { background: rgba(255,255,255,0.1); color: white; font-weight: 600; }
+        .menu-item:hover:not(.active) { background: rgba(255,255,255,0.05); color: white; }
+
+        .main-content {
+            margin-left: 280px;
+            flex: 1;
+            padding: 50px 80px;
+            background-color: #f8f9fa;
+        }
+
+        .sidebar-footer { margin-top: auto; }
+        .logout-btn { 
+            width: 100%; padding: 12px; background: rgba(255,255,255,0.05); 
+            border: 1px solid rgba(255,255,255,0.1); color: white; 
+            border-radius: 10px; cursor: pointer;
+        }
+
+        /* DASHBOARD DÜZENI */
+        .dashboard-top-section {
+            display: flex;
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .stats-grid { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 20px; 
+            flex: 3;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            user-select: none;
+        }
+        .stat-card:hover { 
+            transform: translateY(-4px); 
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+        
+        .stat-card.selected {
+            background: #f1f5f9;
+            transform: translateY(-2px);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        /* Renkli Kenarlıklar */
+        .card-blue { border-left: 5px solid #3b82f6; }
+        .card-green { border-left: 5px solid #15803d; }
+        .card-orange { border-left: 5px solid #f59e0b; }
+
+        .stat-card h3 { color: #64748b; font-size: 0.85rem; margin: 0; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        .stat-card .value { font-size: 1.8rem; font-weight: 800; color: #1a2a44; margin-top: 5px; }
+        .stat-card small { color: #3b82f6; font-weight: 600; margin-top: 5px; }
+
+        /* HIZLI İŞLEMLER / ANLIK BİLGİ PANELİ */
+        .quick-actions-panel {
+            flex: 1.2;
+            background: #1a2a44;
+            border-radius: 15px;
+            padding: 18px;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(21, 34, 56, 0.15);
+        }
+        .quick-actions-panel h4 { margin: 0 0 5px 0; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; color: rgba(255,255,255,0.7); }
+        .action-btn {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 10px 14px; background: rgba(255,255,255,0.08);
+            color: white; text-decoration: none; border-radius: 8px;
+            font-size: 0.85rem; font-weight: 600; transition: 0.2s;
+        }
+        .action-btn:hover { background: rgba(255,255,255,0.15); transform: translateX(3px); }
+
+        /* BEYAZ DETAY KARTI */
+        .table-card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); border: 1px solid #edf2f7; }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="profile-section">
+            <div class="profile-img">YA</div>
+            <h4>Dr. Yunus Adıgüzel</h4>
+            <p style="font-size: 0.8rem; color: rgba(255,255,255,0.4);">Akademik Danışman</p>
+        </div>
+        <nav class="menu">
+            <a href="#" class="menu-item active">Panel Özeti</a>
+            <a href="akademikdanisman2.html" class="menu-item">Bekleyen Onaylar</a>
+            <a href="akademikdanisman4.html" class="menu-item">Onaylanan Etkinlikler</a>
+            <a href="akademikdanisman5.html" class="menu-item">Sorumlu Kulüplerim</a>
+        </nav>
+        <div class="sidebar-footer">
+            <button class="logout-btn">Güvenli Çıkış</button>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="content-header" style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div class="header-title">
+                <h2 style="color: #1a2a44; font-size: 2rem; font-weight: 800; margin: 0;">Hoş Geldiniz, Yunus Adıgüzel</h2>
+                <p style="color: #64748b; margin-top: 5px;">Topluluk idari süreçleri ve etkinlik onay takip paneli.</p>
+            </div>
+            
+            <div class="header-date" id="live-date" style="color: #64748b; font-weight: 600; font-size: 0.95rem; background: white; padding: 8px 15px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); border: 1px solid #edf2f7;">
+                Yükleniyor...
+            </div>
+        </header>
+
+        <section class="dashboard-top-section">
+            <div class="stats-grid">
+                <div class="stat-card card-orange" title="Bekleyen Talepleri İncele" onclick="window.location.href='akademikdanisman2.html'">
+                    <h3>Bekleyen Onaylar</h3>
+                    <div class="value">3</div>
+                </div>
+                <div class="stat-card card-blue" title="Onaylanan Etkinlikler" onclick="window.location.href='akademikdanisman4.html'">
+                    <h3>Onaylananlar (Dönem)</h3>
+                    <div class="value">14</div>
+                </div>
+                <div class="stat-card card-green" title="Sorumlu Olunan Kulüpler" onclick="window.location.href='akademikdanisman5.html'">
+                    <h3>Danışmanı Olduğum</h3>
+                    <div class="value">2</div>
+                    <small>Mühendislik Fakültesi</small>
+                </div>
+            </div>
+
+            <div class="quick-actions-panel">
+                <h4>Hızlı İşlemler</h4>
+                <a href="akademikdanisman2.html" class="action-btn">⏳ Bekleyen Onaylar <span>➔</span></a>
+                <a href="akademikdanisman5.html" class="action-btn">🛡️ Kulüp Yönetimi <span>➔</span></a>
+            </div>
+        </section>
+
+        <section class="request-section">
+            <div class="table-card">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+                    <span style="font-size: 1.2rem;">🔔</span>
+                    <h3 style="margin: 0; color: #1a2a44; font-weight: 800;">Anlık Bildirim Penceresi</h3>
+                </div>
+                <p style="margin: 0; color: #475569; font-size: 0.95rem; line-height: 1.6;">
+                    Yönetim Bilişim Sistemleri ve Yapay Zeka kulüplerinden gelen <b>3 yeni</b> etkinlik planlaması imzanızı beklemektedir. İşlemleri başlatmak için yukarıdaki kartlardan veya soldaki <b>"Bekleyen Onaylar"</b> sekmesinden ilgili ekranlara geçiş yapabilirsiniz.
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // --- CANLI TARİH VE SAAT FONKSİYONU ---
+        function guncelTarihSaatGoster() {
+            const zaman = new Date();
+            const tarihSecenekleri = { year: 'numeric', month: 'long', day: 'numeric' };
+            const formatliTarih = zaman.toLocaleDateString('tr-TR', tarihSecenekleri);
+            const formatliSaat = zaman.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+            
+            document.getElementById('live-date').innerHTML = `📅 ${formatliTarih} &nbsp;|&nbsp; 🕒 ${formatliSaat}`;
+        }
+
+        guncelTarihSaatGoster();
+        setInterval(guncelTarihSaatGoster, 60000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SKS | Geçmiş Etkinlikler</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        /* PANEL VE ANA YAPI AYARLARI */
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+        }
+
+        /* MASTER SIDEBAR */
+        .sidebar {
+            width: 280px;
+            background-color: #152238;
+            color: white;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid rgba(0,0,0,0.1);
+            position: fixed;
+            height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .profile-section { text-align: center; margin-bottom: 40px; }
+        .profile-img { 
+            width: 70px; height: 70px; background: #ff453a; 
+            border-radius: 50%; margin: 0 auto 15px;
+            display: flex; align-items: center; justify-content: center; font-weight: 800;
+        }
+
+        .menu-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 15px; color: rgba(255,255,255,0.6);
+            text-decoration: none; border-radius: 12px; margin-bottom: 8px;
+            transition: 0.3s;
+        }
+        .menu-item.active { background: rgba(255,255,255,0.1); color: white; font-weight: 600; }
+        .menu-item:hover:not(.active) { background: rgba(255,255,255,0.05); color: white; }
+
+        .main-content {
+            margin-left: 280px;
+            flex: 1;
+            padding: 50px 80px;
+            background-color: #f8f9fa;
+        }
+
+        .header-title h2 { color: #1a2a44; font-size: 2rem; font-weight: 800; margin: 0; }
+        .header-title p { color: #64748b; margin: 5px 0 30px 0; }
+
+        /* DASHBOARD İLE BİREBİR AYNI İSTATİSTİK KARTLARI */
+        .stats-grid { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 20px; 
+            margin: 20px 0 40px 0; 
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+        }
+
+        /* Dashboard Oynama Efekti */
+        .stat-card:hover { 
+            transform: translateY(-8px); 
+            box-shadow: 0 12px 25px rgba(0,0,0,0.1);
+        }
+
+        /* Dashboard Renkli Kenarlık Stili */
+        .card-green { border-left: 5px solid #15803d; }
+        .card-red { border-left: 5px solid #b91c1c; }
+        .card-blue { border-left: 5px solid #3b82f6; }
+
+        .stat-card h3 { 
+            color: #64748b; 
+            font-size: 0.85rem; 
+            margin: 0; 
+            font-weight: 600; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+        }
+        
+        .stat-card .value { 
+            font-size: 1.8rem; 
+            font-weight: 800; 
+            color: #1a2a44; 
+            margin-top: 5px; 
+        }
+
+        /* FİLTRE VE LİSTE */
+        .filter-bar { display: flex; gap: 15px; margin-bottom: 25px; align-items: center; }
+        .filter-bar input[type="text"] {
+            flex: 2; padding: 12px 15px; border-radius: 10px; border: 1px solid #e2e8f0; font-family: inherit;
+        }
+        .filter-date-group {
+            display: flex; gap: 10px; align-items: center; flex: 1.5;
+        }
+        .filter-bar input[type="date"] {
+            width: 100%; padding: 11px 12px; border-radius: 10px; border: 1px solid #e2e8f0; font-family: inherit; color: #64748b;
+        }
+
+        .event-card {
+            background: white; border-radius: 15px; padding: 20px; margin-bottom: 15px;
+            display: flex; align-items: center; justify-content: space-between;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02); border: 1px solid #edf2f7;
+        }
+
+        .status-tag { padding: 6px 12px; border-radius: 8px; font-weight: 600; font-size: 0.8rem; text-align: center; }
+        .completed { background: #dcfce7; color: #15803d; }
+        .canceled { background: #fee2e2; color: #b91c1c; }
+
+        /* FOTOĞRAF YÜKLEME ALANI STİLLERİ */
+        .photo-upload-zone {
+            display: flex; align-items: center; margin-right: auto; margin-left: 40px;
+        }
+        .file-input-label {
+            display: flex; align-items: center; gap: 8px; padding: 8px 14px;
+            background-color: #f1f5f9; color: #475569; font-size: 0.85rem; font-weight: 600;
+            border-radius: 8px; cursor: pointer; transition: 0.2s; border: 1px dashed #cbd5e1;
+        }
+        .file-input-label:hover {
+            background-color: #e2e8f0; color: #1e293b; border-color: #94a3b8;
+        }
+        .file-input-label input[type="file"] { display: none; }
+
+        .sidebar-footer { margin-top: auto; }
+        .logout-btn { 
+            width: 100%; padding: 12px; background: rgba(255,255,255,0.05); 
+            border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="profile-section">
+            <div class="profile-img">HK</div>
+            <h4>Hümeyra Kocaağaoğlu</h4>
+            <p style="font-size: 0.8rem; color: rgba(255,255,255,0.4);">030422014</p>
+        </div>
+        <nav class="menu">
+            <a href="dashboard.html" class="menu-item">Ana Sayfa</a>
+            <a href="yeni-basvuru.html" class="menu-item">Yeni Başvuru</a>
+            <a href="mekan-takvimi.html" class="menu-item">Mekan Takvimi</a>
+            <a href="gecmis-etkinlikler.html" class="menu-item active">Geçmiş Etkinlikler</a>
+            <a href="bildirimler.html" class="menu-item">Bildirimler</a>
+        </nav>
+        <div class="sidebar-footer">
+            <button class="logout-btn">Güvenli Çıkış</button>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="content-header">
+            <div class="header-title">
+                <h2>Geçmiş Etkinlik Arşivi</h2>
+                <p>Tamamlanan kulüp faaliyetleri, katılım verileri ve geçmiş dönem kayıtları.</p>
+            </div>
+        </header>
+
+        <section class="stats-grid">
+            <div class="stat-card card-green">
+                <h3>Tamamlanan</h3>
+                <div class="value">24 Etkinlik</div>
+            </div>
+            <div class="stat-card card-red">
+                <h3>İptal Edilen</h3>
+                <div class="value">2 Etkinlik</div>
+            </div>
+            <div class="stat-card card-blue">
+                <h3>Toplam Katılım</h3>
+                <div class="value">1.250+</div>
+            </div>
+        </section>
+
+        <!-- YENİLENEN TARİH ARALIKLI FİLTRE ÇUBUĞU -->
+        <div class="filter-bar">
+            <input type="text" placeholder="Etkinlik adına göre arşivde ara...">
+            <div class="filter-date-group">
+                <input type="date" title="Başlangıç Tarihi">
+                <span style="color: #94a3b8; font-weight: 600;">-</span>
+                <input type="date" title="Bitiş Tarihi">
+            </div>
+        </div>
+
+        <section class="events-list">
+            <!-- TAMAMLANAN ETKİNLİK KARTI (FOTOĞRAF EKLEME ÖZELLİKLİ) -->
+            <div class="event-card">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div style="font-weight: 800; color: #1a2a44; min-width: 60px;">12 ARA</div>
+                    <div>
+                        <h4 style="margin:0; font-size:1rem;">YBS Kariyer Zirvesi '25</h4>
+                        <p style="margin:2px 0 0 0; color:#64748b; font-size:0.85rem;">📍 Konferans Salonu A</p>
+                    </div>
+                </div>
+                
+                <!-- YENİ FOTOĞRAF EKLEME ALANI -->
+                <div class="photo-upload-zone">
+                    <label class="file-input-label">
+                        📷 <span>Etkinlik Fotoğrafı Ekle</span>
+                        <input type="file" accept="image/*" multiple>
+                    </label>
+                </div>
+
+                <span class="status-tag completed">Tamamlandı</span>
+            </div>
+
+            <!-- İPTAL EDİLEN ETKİNLİK KARTI (FOTOĞRAF ALANI YOK) -->
+            <div class="event-card">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div style="font-weight: 800; color: #1a2a44; min-width: 60px;">20 EKİ</div>
+                    <div>
+                        <h4 style="margin:0; font-size:1rem;">Kulüp Tanıtım Günleri</h4>
+                        <p style="margin:2px 0 0 0; color:#64748b; font-size:0.85rem;">📍 Kampüs Bahçesi</p>
+                    </div>
+                </div>
+                
+                <!-- İptal edilen etkinliklerde boşluğu korumak ve hizalamayı bozmamak için boş alan bırakıldı -->
+                <div class="photo-upload-zone"></div>
+
+                <span class="status-tag canceled">İptal Edildi</span>
+            </div>
+        </section>
+    </main>
+
+</body>
+</html>

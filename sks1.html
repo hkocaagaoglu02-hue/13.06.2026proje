@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SKS Panel | SKS Genel Bakış</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        /* MASTER SIDEBAR VE ANA YAPI AYARLARI */
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+        }
+
+        .sidebar {
+            width: 280px;
+            background-color: #0f172a; /* Öğrenci ve Danışman panelleri ile %100 aynı koyu lacivert */
+            color: white;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid rgba(0,0,0,0.1);
+            position: fixed;
+            height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .profile-section { text-align: center; margin-bottom: 40px; }
+        .profile-img { 
+            width: 70px; height: 70px; background: #10b981; /* SKS Yöneticisi için yeşil profil ikonu */
+            border-radius: 50%; margin: 0 auto 15px;
+            display: flex; align-items: center; justify-content: center; font-weight: 800;
+        }
+
+        .menu-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 15px; color: rgba(255,255,255,0.6);
+            text-decoration: none; border-radius: 12px; margin-bottom: 8px;
+            transition: 0.3s;
+        }
+        .menu-item.active { background: rgba(255,255,255,0.1); color: white; font-weight: 600; }
+        .menu-item:hover:not(.active) { background: rgba(255,255,255,0.05); color: white; }
+
+        .main-content {
+            margin-left: 280px;
+            flex: 1;
+            padding: 50px 80px;
+            background-color: #f8f9fa;
+        }
+
+        .sidebar-footer { margin-top: auto; }
+        .logout-btn { 
+            width: 100%; padding: 12px; background: rgba(255,255,255,0.05); 
+            border: 1px solid rgba(255,255,255,0.1); color: white; 
+            border-radius: 10px; cursor: pointer;
+        }
+
+        /* DASHBOARD DÜZENİ */
+        .dashboard-top-section {
+            display: flex;
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .stats-grid { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 20px; 
+            flex: 3;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            user-select: none;
+        }
+        .stat-card:hover { 
+            transform: translateY(-4px); 
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+
+        /* Renkli Kenarlıklar */
+        .card-blue { border-left: 5px solid #3b82f6; }
+        .card-green { border-left: 5px solid #15803d; }
+        .card-orange { border-left: 5px solid #f59e0b; }
+
+        .stat-card h3 { color: #64748b; font-size: 0.85rem; margin: 0; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        .stat-card .value { font-size: 1.8rem; font-weight: 800; color: #1a2a44; margin-top: 5px; }
+        .stat-card small { color: #10b981; font-weight: 600; margin-top: 5px; }
+
+        /* SÜRDÜRÜLEBİLİRLİK VE TASARRUF ÖZEL PANELİ (QUICK ACTIONS YERİNE) */
+        .quick-actions-panel {
+            flex: 1.2;
+            background: #1a2a44;
+            border-radius: 15px;
+            padding: 18px;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+            box-shadow: 0 4px 15px rgba(21, 34, 56, 0.15);
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .quick-actions-panel:hover { transform: translateY(-4px); }
+        .quick-actions-panel h4 { margin: 0 0 2px 0; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; color: rgba(255,255,255,0.7); }
+        .quick-actions-panel .value { font-size: 1.8rem; font-weight: 800; color: #ffffff; }
+        .quick-actions-panel small { color: #34d399; font-weight: 600; }
+
+        /* ALT BÖLÜM ÇİFT KARTLI GRID YAPISI */
+        .dashboard-row { 
+            display: grid; 
+            grid-template-columns: 2fr 1fr; 
+            gap: 25px; 
+            margin-top: 5px; 
+        }
+
+        /* TABLO VE MEKAN ALANI */
+        .table-card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); border: 1px solid #edf2f7; }
+        .data-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .data-table th { text-align: left; padding: 12px; color: #64748b; border-bottom: 1px solid #edf2f7; font-size: 0.9rem; }
+        .data-table td { padding: 15px 12px; border-bottom: 1px solid #edf2f7; color: #1a2a44; font-size: 0.95rem; }
+        
+        .status-badge { padding: 6px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: 600; display: inline-block; text-align: center; }
+        .badge-waiting { background: #fef9c3; color: #854d0e; }
+        .badge-approved { background: #dcfce7; color: #15803d; }
+
+        /* Mekan Durum Listesi */
+        .venue-status { display: flex; flex-direction: column; gap: 12px; margin-top: 15px; }
+        .venue-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px dashed #edf2f7; }
+        .venue-name { font-weight: 600; color: #1a2a44; font-size: 0.9rem; }
+        .status-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+        .bg-success { background: #10b981; }
+        .bg-danger { background: #ef4444; }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="profile-section">
+            <div class="profile-img">GT</div>
+            <h4>Gürhan Toktaş</h4>
+            <p style="font-size: 0.8rem; color: rgba(255,255,255,0.4);">SKS Daire Bşk.</p>
+        </div>
+        <nav class="menu">
+            <a href="#" class="menu-item active">Genel Bakış</a>
+            <a href="sks2.html" class="menu-item">Heyet Onayları</a>
+            <a href="sks4.html" class="menu-item">Mekan Yönetimi</a>
+            <a href="sks6.html" class="menu-item">Kulüp Yönetimi</a>
+            <a href="sks5.html" class="menu-item">Raporlar</a>
+        </nav>
+        <div class="sidebar-footer">
+            <button class="logout-btn">Güvenli Çıkış</button>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="content-header" style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div class="header-title">
+                <h2 style="color: #1a2a44; font-size: 2rem; font-weight: 800; margin: 0;">Hoş Geldiniz, Gürhan Toktaş</h2>
+                <p style="color: #64748b; margin-top: 5px;">Sistemdeki tüm operasyonel süreçlerin anlık özeti.</p>
+            </div>
+            
+            <div class="header-date" id="live-date" style="color: #64748b; font-weight: 600; font-size: 0.95rem; background: white; padding: 8px 15px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); border: 1px solid #edf2f7;">
+                Yükleniyor...
+            </div>
+        </header>
+
+        <section class="dashboard-top-section">
+            <div class="stats-grid">
+                <div class="stat-card card-orange" onclick="window.location.href='sks2.html'" title="Heyet Onaylarına Git">
+                    <h3>Bekleyen Başvurular</h3>
+                    <div class="value">12</div>
+                </div>
+                <div class="stat-card card-blue" onclick="window.location.href='sks5.html'" title="Raporlara Git">
+                    <h3>Onaylanan Etkinlikler</h3>
+                    <div class="value">48</div>
+                </div>
+                <div class="stat-card card-green" onclick="window.location.href='sks4.html'" title="Mekan Yönetimine Git">
+                    <h3>Kullanılan Mekanlar</h3>
+                    <div class="value">85%</div>
+                </div>
+            </div>
+
+            <div class="quick-actions-panel" onclick="window.location.href='sks5.html'" title="Genel Raporları İncele">
+                <h4>Tasarruf (Kağıt)</h4>
+                <div class="value">2.400 Sayfa</div>
+                <small>☘️ Bu Ay Engellenen Ağaç Kesimi</small>
+            </div>
+        </section>
+
+        <div class="dashboard-row">
+            <section class="table-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <h3 style="margin: 0; color: #1a2a44; font-weight: 800;">Son Başvuru Hareketleri</h3>
+                </div>
+                
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Topluluk</th>
+                            <th>Etkinlik</th>
+                            <th>Danışman</th>
+                            <th>Durum</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Yazılım Kulübü</td>
+                            <td>AI & Web Geliştirme Workshop</td>
+                            <td>Dr. Gamze Türkmen</td>
+                            <td><span class="status-badge badge-waiting">Heyet Bekliyor</span></td>
+                        </tr>
+                        <tr>
+                            <td>Müzik Topluluğu</td>
+                            <td>Bahar Dönemi Kampüs Konseri</td>
+                            <td>Öğr. Gör. Büşranur Nalbant</td>
+                            <td><span class="status-badge badge-approved">Onaylandı</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="table-card">
+                <h3 style="margin: 0 0 5px 0; color: #1a2a44; font-weight: 800; font-size: 1.1rem;">Mekan Durumu</h3>
+                <div class="venue-status">
+                    <div class="venue-item">
+                        <span class="venue-name">Konferans Salonu A</span>
+                        <span style="font-size: 0.8rem; color: #ef4444; font-weight: 700;"><span class="status-dot bg-danger"></span>DOLU</span>
+                    </div>
+                    <div class="venue-item">
+                        <span class="venue-name">Cep Sineması</span>
+                        <span style="font-size: 0.8rem; color: #10b981; font-weight: 700;"><span class="status-dot bg-success"></span>UYGUN</span>
+                    </div>
+                    <div class="venue-item">
+                        <span class="venue-name">Çok Amaçlı Salon</span>
+                        <span style="font-size: 0.8rem; color: #10b981; font-weight: 700;"><span class="status-dot bg-success"></span>UYGUN</span>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        // --- CANLI TARİH VE SAAT FONKSİYONU (Sistem Bütünüyle Senkronize) ---
+        function guncelTarihSaatGoster() {
+            const zaman = new Date();
+            const tarihSecenekleri = { year: 'numeric', month: 'long', day: 'numeric' };
+            const formatliTarih = zaman.toLocaleDateString('tr-TR', tarihSecenekleri);
+            const formatliSaat = zaman.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+            
+            document.getElementById('live-date').innerHTML = `📅 ${formatliTarih} &nbsp;|&nbsp; 🕒 ${formatliSaat}`;
+        }
+
+        guncelTarihSaatGoster();
+        setInterval(guncelTarihSaatGoster, 60000);
+    </script>
+</body>
+</html>

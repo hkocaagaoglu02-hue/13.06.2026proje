@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SKS | Heyet Karar Paneli</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        /* MASTER SIDEBAR VE ANA YAPI - %100 TUTARLI */
+        body { margin: 0; font-family: 'Inter', sans-serif; display: flex; min-height: 100vh; background-color: #f8f9fa; }
+        .sidebar { width: 280px; background-color: #0f172a; color: white; padding: 40px 20px; display: flex; flex-direction: column; border-right: 1px solid rgba(0,0,0,0.1); position: fixed; height: 100vh; box-sizing: border-box; }
+        .profile-section { text-align: center; margin-bottom: 40px; }
+        .profile-img { width: 70px; height: 70px; background: #10b981; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-weight: 800; }
+        .menu-item { display: flex; align-items: center; gap: 12px; padding: 15px; color: rgba(255,255,255,0.6); text-decoration: none; border-radius: 12px; margin-bottom: 8px; transition: 0.3s; }
+        .menu-item.active { background: rgba(16, 185, 129, 0.2); color: #34d399; font-weight: 600; }
+        .menu-item:hover:not(.active) { background: rgba(255,255,255,0.05); color: white; }
+        .main-content { margin-left: 280px; flex: 1; padding: 50px 80px; background-color: #f8f9fa; }
+        .sidebar-footer { margin-top: auto; }
+        .logout-btn { width: 100%; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 10px; cursor: pointer; }
+
+        /* HEYET KARAR EKRANI ÖZEL STİLLERİ */
+        .heyet-header { 
+            background: #1e293b; 
+            color: white; 
+            padding: 30px; 
+            border-radius: 24px; 
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* YENİ GELİŞMİŞ FİLTRELEME ÇUBUĞU */
+        .filter-bar {
+            background: white;
+            padding: 15px 25px;
+            border-radius: 16px;
+            border: 1px solid #edf2f7;
+            margin-bottom: 25px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.01);
+            flex-wrap: wrap;
+        }
+        .search-input {
+            flex: 2;
+            min-width: 200px;
+            padding: 12px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            outline: none;
+            background: #f8fafc;
+            font-family: inherit;
+        }
+        .search-input:focus, .date-input:focus { border-color: #10b981; background: white; }
+        
+        .date-filter-group { display: flex; align-items: center; gap: 8px; color: #64748b; font-size: 0.85rem; font-weight: 600; }
+        .date-input { padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 10px; background: #f8fafc; font-family: inherit; font-size: 0.85rem; outline: none; }
+
+        /* Rapor Al Butonu */
+        .btn-report {
+            background: #10b981;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: auto;
+        }
+        .btn-report:hover { background: #059669; }
+
+        .decision-grid { display: flex; flex-direction: column; gap: 20px; }
+        
+        .decision-card { 
+            background: white; 
+            border-radius: 20px; 
+            border: 1px solid #edf2f7; 
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: 8px 1fr 280px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+            transition: transform 0.2s;
+        }
+        .decision-card:hover { transform: translateY(-2px); }
+        
+        .status-accent { background: #3b82f6; }
+
+        .event-info { padding: 25px; display: flex; flex-direction: column; justify-content: center; }
+        .event-info h3 { margin: 0 0 8px 0; color: #0f172a; font-size: 1.1rem; }
+        .event-meta { font-size: 0.85rem; color: #64748b; display: flex; gap: 15px; }
+
+        .action-zone { 
+            background: #f8fafc; 
+            padding: 25px; 
+            border-left: 1px solid #edf2f7;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-decision { padding: 10px; border-radius: 10px; border: none; font-weight: 700; cursor: pointer; font-size: 0.85rem; transition: 0.2s; }
+        .btn-approve { background: #dcfce7; color: #166534; }
+        .btn-reject { background: #fee2e2; color: #991b1b; }
+        .btn-view { background: #e2e8f0; color: #475569; margin-bottom: 5px; }
+        
+        .btn-approve:hover { background: #bbf7d0; }
+        .btn-reject:hover { background: #fecaca; }
+        .btn-view:hover { background: #cbd5e1; }
+
+        .heyet-note { width: 100%; border: 1px solid #e2e8f0; border-radius: 8px; padding: 8px; font-size: 0.8rem; margin-bottom: 5px; font-family: inherit; box-sizing: border-box; resize: none; }
+
+        /* =========================================
+           🖨️ YAZDIRMA (RAPOR) CSS AYARLARI 
+           ========================================= */
+        @media print {
+            body { background: white; color: black; }
+            .sidebar, .filter-bar, .action-zone, .heyet-header div:last-child { display: none !important; } /* Gereksiz elemanları gizle */
+            .main-content { margin-left: 0 !important; padding: 0 !important; width: 100%; }
+            .decision-card { 
+                grid-template-columns: 1fr; /* Rapor formatında buton alanını kaldır, tam satır yap */
+                border: 1px solid #000; 
+                margin-bottom: 20px; 
+                page-break-inside: avoid;
+                box-shadow: none;
+            }
+            .status-accent { display: none; }
+            .heyet-header { background: #f1f5f9 !important; color: #000 !important; border: 1px solid #cbd5e1; }
+            .heyet-header p { color: #475569 !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="profile-section">
+            <div class="profile-img">GT</div>
+            <h4>Gürhan Toktaş</h4>
+            <p style="font-size: 0.8rem; color: rgba(255,255,255,0.4);">SKS Daire Bşk.</p>
+        </div>
+        <nav class="menu">
+            <a href="sks1.html" class="menu-item">Genel Bakış</a>
+            <a href="sks2.html" class="menu-item active">Heyet Onayları</a>
+            <a href="sks4.html" class="menu-item">Mekan Yönetimi</a>
+            <a href="sks6.html" class="menu-item">Kulüp Yönetimi</a>
+            <a href="sks5.html" class="menu-item">Raporlar</a>
+        </nav>
+        <div class="sidebar-footer">
+            <button class="logout-btn">Güvenli Çıkış</button>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <div class="heyet-header">
+            <div>
+                <h2 style="margin:0; font-size: 1.5rem;">Heyet Toplantı Modu</h2>
+                <p style="margin:5px 0 0; color: #94a3b8; font-size: 0.9rem;">Oturum Tarihi: 15 Mayıs 2026 | Kurul Başkanı: Dr. Yusuf Aydın</p>
+            </div>
+            <div style="text-align: right;">
+                <span style="background: #10b981; padding: 8px 15px; border-radius: 10px; font-weight: 700; font-size: 0.8rem;">OTURUM AÇIK</span>
+            </div>
+        </div>
+
+        <!-- GELİŞMİŞ TARİH FİLTRELEME VE RAPOR BARBARI -->
+        <section class="filter-bar">
+            <input type="text" id="panelSearch" class="search-input" onkeyup="filterData()" placeholder="Metne göre anlık ara...">
+            
+            <div class="date-filter-group">
+                <span>Tarih Aralığı:</span>
+                <input type="date" id="startDate" class="date-input" onchange="filterData()">
+                <span>-</span>
+                <input type="date" id="endDate" class="date-input" onchange="filterData()">
+            </div>
+
+            <!-- Rapor Çıktısı Tetikleyici Buton -->
+            <button class="btn-report" onclick="generateReport()">📊 Listeyi Raporla (PDF)</button>
+        </section>
+
+        <div class="decision-grid" id="applicationGrid">
+            
+            <!-- Etkinlik 1 -->
+            <div class="decision-card" data-date="2026-05-24">
+                <div class="status-accent"></div>
+                <div class="event-info">
+                    <h3 class="event-title">Kariyer Zirvesi '26</h3>
+                    <div class="event-meta">
+                        <span class="club-tag">👥 Yazılım Kulübü</span>
+                        <span>📍 Konferans Salonu A</span>
+                        <!-- JavaScript kolay okusun diye standart veri formatı eklendi -->
+                        <span class="date-tag">📅 24.05.2026</span>
+                    </div>
+                    <p style="font-size: 0.9rem; color: #475569; margin-top: 12px; margin-bottom: 0;">
+                        <b>Danışman Notu:</b> "Kulüp bu yıl çok aktif, desteklenmesi uygun görülmüştür."
+                    </p>
+                </div>
+                <div class="action-zone">
+                    <button onclick="window.location.href='sks3.html'" class="btn-decision btn-view">📄 DETAYLARI İNCELE</button>
+                    <textarea class="heyet-note" placeholder="Heyet Karar Notu..."></textarea>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <button class="btn-decision btn-approve">ONAYLA</button>
+                        <button class="btn-decision btn-reject">REDDET</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Etkinlik 2 -->
+            <div class="decision-card" data-date="2026-06-02">
+                <div class="status-accent" style="background: #f59e0b;"></div>
+                <div class="event-info">
+                    <h3 class="event-title">Bahar Konseri</h3>
+                    <div class="event-meta">
+                        <span class="club-tag">👥 Müzik Topluluğu</span>
+                        <span>📍 Amfi Tiyatro</span>
+                        <span class="date-tag">📅 02.06.2026</span>
+                    </div>
+                    <p style="font-size: 0.9rem; color: #475569; margin-top: 12px; margin-bottom: 0;">
+                        <b>Danışman Notu:</b> "Ses sistemi ve güvenlik önlemleri artırılmalıdır."
+                    </p>
+                </div>
+                <div class="action-zone">
+                    <button onclick="window.location.href='sks3.html'" class="btn-decision btn-view">📄 DETAYLARI İNCELE</button>
+                    <textarea class="heyet-note" placeholder="Heyet Karar Notu..."></textarea>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <button class="btn-decision btn-approve">ONAYLA</button>
+                        <button class="btn-decision btn-reject">REDDET</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- FİLTRELEME VE RAPORLAMA ZEKASI -->
+    <script>
+        function filterData() {
+            const searchText = document.getElementById('panelSearch').value.toLowerCase();
+            const startDateVal = document.getElementById('startDate').value;
+            const endDateVal = document.getElementById('endDate').value;
+            
+            const cards = document.getElementsByClassName('decision-card');
+
+            for (let i = 0; i < cards.length; i++) {
+                const card = cards[i];
+                const title = card.querySelector('.event-title').innerText.toLowerCase();
+                const club = card.querySelector('.club-tag').innerText.toLowerCase();
+                const cardDateStr = card.getAttribute('data-date'); // Örn: "2026-05-24"
+                
+                // 1. Adım: Kelime Eşleşme Kontrolü
+                const textMatch = title.includes(searchText) || club.includes(searchText);
+                
+                // 2. Adım: Tarih Aralığı Kontrolü
+                let dateMatch = true;
+                if (startDateVal && cardDateStr < startDateVal) dateMatch = false;
+                if (endDateVal && cardDateStr > endDateVal) dateMatch = false;
+
+                // İki şartı da sağlıyorsa kartı göster, sağlamıyorsa gizle
+                if (textMatch && dateMatch) {
+                    card.style.display = "";
+                } else {
+                    card.style.display = "none";
+                }
+            }
+        }
+
+        // Sadece ekranda kalan verilerin resmi çıktısını alan fonksiyon
+        function generateReport() {
+            window.print();
+        }
+    </script>
+</body>
+</html>

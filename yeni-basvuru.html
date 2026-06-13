@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SKS | Yeni Başvuru</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        /* MASTER SIDEBAR VE ANA YAPI AYARLARI */
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+        }
+
+        .sidebar {
+            width: 280px;
+            background-color: #152238;
+            color: white;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid rgba(0,0,0,0.1);
+            position: fixed;
+            height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .profile-section { text-align: center; margin-bottom: 40px; }
+        .profile-img {
+            width: 70px; height: 70px; background: #ff453a;
+            border-radius: 50%; margin: 0 auto 15px;
+            display: flex; align-items: center; justify-content: center; font-weight: 800;
+        }
+
+        .menu-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 15px; color: rgba(255,255,255,0.6);
+            text-decoration: none; border-radius: 12px; margin-bottom: 8px;
+            transition: 0.3s;
+        }
+        .menu-item.active { background: rgba(255,255,255,0.1); color: white; font-weight: 600; }
+        .menu-item:hover:not(.active) { background: rgba(255,255,255,0.05); color: white; }
+
+        .main-content {
+            margin-left: 280px;
+            flex: 1;
+            padding: 50px 80px;
+            background-color: #f8f9fa;
+        }
+
+        .sidebar-footer { margin-top: auto; }
+        .logout-btn {
+            width: 100%; padding: 12px; background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1); color: white;
+            border-radius: 10px; cursor: pointer;
+        }
+
+        /* FORM ÖZEL STİLLERİ */
+        .header-title h2 { color: #1a2a44; font-size: 2rem; font-weight: 800; margin-bottom: 30px; }
+        .form-section { background: white; padding: 25px; border-radius: 20px; margin-bottom: 20px; border: 1px solid #edf2f7; box-shadow: 0 4px 20px rgba(0,0,0,0.04); }
+        .section-header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
+        .step-num { background: #152238; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .input-group { display: flex; flex-direction: column; gap: 8px; }
+        .input-group label { font-weight: 600; color: #1a2a44; font-size: 0.9rem; }
+        .input-group input, .input-group select, .input-group textarea { padding: 12px; border-radius: 10px; border: 1px solid #e2e8f0; font-family: inherit; }
+        .hidden-section { display: none; }
+        .mt-20 { margin-top: 20px; }
+
+        /* Yeni Eklenen Ortak Etkinlik Soru Kutusu Stili (Tasarım Dilinizle Uyumlu) */
+        .question-box {
+            background: rgba(21, 34, 56, 0.03);
+            padding: 18px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(21, 34, 56, 0.08);
+        }
+        .question-box label { font-weight: 600; color: #1a2a44; }
+
+        /* Dinamik Açılış Animasyonu */
+        .animate-slide { animation: slideDown 0.25s ease-out; }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-actions { display: flex; gap: 15px; margin-top: 30px; }
+        .btn { padding: 12px 25px; border-radius: 10px; font-weight: 600; cursor: pointer; border: none; transition: 0.3s; }
+        .btn-primary { background: #152238; color: white; }
+        .btn-secondary { background: #e2e8f0; color: #475569; }
+        .btn:hover { opacity: 0.9; }
+    </style>
+</head>
+<body>
+
+<aside class="sidebar">
+    <div class="profile-section">
+        <div class="profile-img">HK</div>
+        <h4>Hümeyra Kocaağaoğlu</h4>
+        <p style="font-size: 0.8rem; color: rgba(255,255,255,0.4);">030422014</p>
+    </div>
+    <nav class="menu">
+        <a href="dashboard.html" class="menu-item">Ana Sayfa</a>
+        <a href="yeni-basvuru.html" class="menu-item active">Yeni Başvuru</a>
+        <a href="mekan-takvimi.html" class="menu-item">Mekan Takvimi</a>
+        <a href="gecmis-etkinlikler.html" class="menu-item">Geçmiş Etkinlikler</a>
+        <a href="bildirimler.html" class="menu-item">Bildirimler</a>
+    </nav>
+    <div class="sidebar-footer">
+        <button class="logout-btn">Güvenli Çıkış</button>
+    </div>
+</aside>
+
+<main class="main-content">
+    <header class="content-header">
+        <div class="header-title">
+            <h2>Yeni Etkinlik Başvurusu</h2>
+            <p>Etkinlik detaylarını, mekan ve materyal taleplerinizi eksiksiz doldurarak onaya gönderiniz.</p>
+        </div>
+    </header>
+
+    <form class="application-form" id="mainForm" onsubmit="handleFormSubmit(event)">
+
+        <section class="form-section">
+            <div class="section-header">
+                <span class="step-num">1</span>
+                <h3>Temel Etkinlik Bilgileri</h3>
+            </div>
+            <div class="form-grid">
+                <div class="input-group">
+                    <label>Etkinlik Adı</label>
+                    <input type="text" placeholder="Örn: Kariyer Zirvesi" required>
+                </div>
+                <div class="input-group">
+                    <label>Etkinlik Türü</label>
+                    <select required>
+                        <option value="">Seçiniz...</option>
+                        <option>Konferans</option>
+                        <option>Çalıştay</option>
+                        <option>Sosyal Sorumluluk</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="input-group mt-20">
+                <label>Etkinlik Açıklaması</label>
+                <textarea rows="3" placeholder="Etkinliğin amacı, kapsamı ve detaylı açıklaması..." required></textarea>
+            </div>
+
+            <div class="input-group mt-20">
+                <div class="question-box">
+                    <label for="joint-select">Bu etkinlik başka bir kulüp ile ORTAK mı düzenlenecek?</label>
+                    <select id="joint-select" onchange="togglePanel('partner-clubs-panel', this.value)" style="max-width: 180px;">
+                        <option value="hayir">Hayır</option>
+                        <option value="evet">Evet</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="partner-clubs-panel" class="input-group mt-20 hidden-section animate-slide">
+                <label style="font-weight: 700; color: #1a2a44;">Ortaklık Yapılacak Diğer Kulüp / Topluluklar</label>
+                <select id="partner-clubs" multiple style="height: 150px; padding: 10px;">
+                    <option value="ybs">Yönetim Bilişim Sistemleri Kulübü</option>
+                    <option value="fikir-aksiyon">Fikir ve Aksiyon Kulübü</option>
+                    <option value="nextgen">NextGen Kulübü</option>
+                    <option value="yazilim">Yazılım ve Bilişim Kulübü</option>
+                    <option value="girisimcilik">Girişimcilik ve İnovasyon Topluluğu</option>
+                    <option value="muzik">Müzik ve Sahne Sanatları Kulübü</option>
+                    <option value="tiyatro">Tiyatro Topluluğu</option>
+                    <option value="ieee">IEEE Öğrenci Kolu</option>
+                </select>
+                <small style="color: #64748b; margin-top: 4px;">ℹ️ Birden fazla kulüp seçmek için <b>Ctrl</b> (Mac için <b>Cmd</b>) tuşuna basılı tutabilirsiniz.</small>
+            </div>
+        </section>
+
+        <section class="form-section">
+            <div class="section-header">
+                <span class="step-num">2</span>
+                <h3>Mekan Talebi</h3>
+            </div>
+            <div class="input-group">
+                <label>Mekan rezervasyonu yapılacak mı?</label>
+                <select onchange="togglePanel('mekan-panel', this.value)" style="max-width: 200px;">
+                    <option value="hayir">Hayır</option>
+                    <option value="evet">Evet</option>
+                </select>
+            </div>
+            <div id="mekan-panel" class="form-grid hidden-section mt-20">
+                <div class="input-group">
+                    <label>İstenen Mekan</label>
+                    <select>
+                        <option>AE114</option>
+                        <option>AE115</option>
+                        <option>BZ08</option>
+                        <option>BZ09</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Tahmini Katılımcı</label>
+                    <input type="number" placeholder="Sayı giriniz">
+                </div>
+            </div>
+        </section>
+
+        <section class="form-section">
+            <div class="section-header">
+                <span class="step-num">3</span>
+                <h3>Kaynak ve Materyal Talebi</h3>
+            </div>
+            <div class="input-group">
+                <label>Materyal ihtiyacınız var mı?</label>
+                <select onchange="togglePanel('kaynak-panel', this.value)" style="max-width: 200px;">
+                    <option value="hayir">Hayır</option>
+                    <option value="evet">Evet</option>
+                </select>
+            </div>
+            <div id="kaynak-panel" class="hidden-section mt-20">
+                <div class="form-grid" style="grid-template-columns: 1fr 1fr;">
+                    <label style="display: flex; align-items: center; gap: 10px; font-weight: 400;">
+                        <input type="checkbox" style="width: auto;"> Klima ve Isıtma
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 10px; font-weight: 400;">
+                        <input type="checkbox" style="width: auto;"> Projeksiyon
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 10px; font-weight: 400;">
+                        <input type="checkbox" style="width: auto;"> İkram Seti
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 10px; font-weight: 400;">
+                        <input type="checkbox" style="width: auto;"> Ek Sandalye
+                    </label>
+                </div>
+                <div class="input-group mt-20">
+                    <label>Özel Notlar</label>
+                    <textarea rows="2" placeholder="Diğer spesifik cihaz veya ekipman talepleriniz..."></textarea>
+                </div>
+            </div>
+        </section>
+
+        <div class="form-actions">
+            <button type="button" class="btn btn-secondary">Taslağı Kaydet</button>
+            <button type="submit" class="btn btn-primary">Başvuruyu Onaya Gönder</button>
+        </div>
+    </form>
+</main>
+
+<script>
+    function togglePanel(id, value) {
+        const panel = document.getElementById(id);
+        const partnerSelect = document.getElementById('partner-clubs');
+
+        if (value === 'evet') {
+            panel.classList.remove('hidden-section');
+            if(id === 'partner-clubs-panel' && partnerSelect) {
+                partnerSelect.setAttribute('required', 'required');
+            }
+        } else {
+            panel.classList.add('hidden-section');
+            if(id === 'partner-clubs-panel' && partnerSelect) {
+                partnerSelect.removeAttribute('required');
+            }
+        }
+    }
+
+    function handleFormSubmit(event) {
+        event.preventDefault(); 
+        window.location.href = 'basvuru-onay.html'; 
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SKS | Bildirimler</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        /* MASTER SIDEBAR VE ANA YAPI AYARLARI */
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+        }
+
+        .sidebar {
+            width: 280px;
+            background-color: #152238;
+            color: white;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid rgba(0,0,0,0.1);
+            position: fixed;
+            height: 100vh;
+            box-sizing: border-box;
+            z-index: 100;
+        }
+
+        .profile-section { text-align: center; margin-bottom: 40px; }
+        .profile-img { 
+            width: 70px; height: 70px; background: #ff453a; 
+            border-radius: 50%; margin: 0 auto 15px;
+            display: flex; align-items: center; justify-content: center; font-weight: 800;
+        }
+
+        .menu-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 15px; color: rgba(255,255,255,0.6);
+            text-decoration: none; border-radius: 12px; margin-bottom: 8px;
+            transition: 0.3s;
+        }
+        .menu-item.active { background: rgba(255,255,255,0.1); color: white; font-weight: 600; }
+        .menu-item:hover:not(.active) { background: rgba(255,255,255,0.05); color: white; }
+
+        .main-content {
+            margin-left: 280px;
+            flex: 1;
+            padding: 50px 80px;
+            background-color: #f8f9fa;
+        }
+
+        .header-title h2 { color: #1a2a44; font-size: 2rem; font-weight: 800; margin: 0; }
+        .header-title p { color: #64748b; margin: 5px 0 30px 0; }
+
+        /* BİLDİRİM ÖĞELERİ (KART DİLİ) */
+        .notification-container {
+            margin-top: 30px;
+            max-width: 900px;
+        }
+
+        .notification-item {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+            border: 1px solid #edf2f7;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .notification-item:hover {
+            transform: translateY(-3px);
+            border-color: #3b82f6;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+        }
+
+        /* Okunmamış Bildirim (Dashboard Kartları ile Aynı Stil) */
+        .notification-item.unread {
+            border-left: 5px solid #ff453a;
+            background: #ffffff;
+        }
+
+        .icon-box {
+            min-width: 50px;
+            height: 50px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+        }
+
+        .icon-success { background: #dcfce7; color: #15803d; }
+        .icon-danger { background: #fee2e2; color: #b91c1c; }
+        .icon-info { background: #e0f2fe; color: #0369a1; }
+
+        .notif-content { flex: 1; }
+        .notif-content h4 { 
+            margin: 0 0 6px 0; 
+            color: #1a2a44; 
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+        .notif-content p { 
+            margin: 0; 
+            color: #64748b; 
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        .notif-time { 
+            font-size: 0.8rem; 
+            color: #94a3b8; 
+            margin-top: 10px;
+            display: block;
+            font-weight: 500;
+        }
+
+        .sidebar-footer { margin-top: auto; }
+        .logout-btn { 
+            width: 100%; padding: 12px; background: rgba(255,255,255,0.05); 
+            border: 1px solid rgba(255,255,255,0.1); color: white; 
+            border-radius: 10px; cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="profile-section">
+            <div class="profile-img">HK</div>
+            <h4>Hümeyra Kocaağaoğlu</h4>
+            <p style="font-size: 0.8rem; color: rgba(255,255,255,0.4);">030422014</p>
+        </div>
+        <nav class="menu">
+            <a href="dashboard.html" class="menu-item">Ana Sayfa</a>
+            <a href="yeni-basvuru.html" class="menu-item">Yeni Başvuru</a>
+            <a href="mekan-takvimi.html" class="menu-item">Mekan Takvimi</a>
+            <a href="gecmis-etkinlikler.html" class="menu-item">Geçmiş Etkinlikler</a>
+            <a href="bildirimler.html" class="menu-item active">Bildirimler</a>
+        </nav>
+        <div class="sidebar-footer">
+            <button class="logout-btn">Güvenli Çıkış</button>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="content-header">
+            <div class="header-title">
+                <h2>Bildirim Paneli</h2>
+                <p>Başvurularınızın güncel durumları ve önemli duyurular.</p>
+            </div>
+        </header>
+
+        <section class="notification-container">
+            
+            <div class="notification-item unread">
+                <div class="icon-box icon-success">✅</div>
+                <div class="notif-content">
+                    <h4>Mekan Başvurusu Onaylandı</h4>
+                    <p>"YBS Kariyer Zirvesi '25" etkinliği için Konferans Salonu A talebiniz SKS birimi tarafından onaylanmıştır.</p>
+                    <span class="notif-time">2 dakika önce</span>
+                </div>
+            </div>
+
+            <div class="notification-item">
+                <div class="icon-box icon-info">📢</div>
+                <div class="notif-content">
+                    <h4>Sistem Bakım Duyurusu</h4>
+                    <p>Bu akşam saat 22:00 - 00:00 arasında mekan rezervasyon modülü veritabanı optimizasyonu nedeniyle kapalı olacaktır.</p>
+                    <span class="notif-time">3 saat önce</span>
+                </div>
+            </div>
+
+            <div class="notification-item">
+                <div class="icon-box icon-danger">❌</div>
+                <div class="notif-content">
+                    <h4>Materyal Talebi Reddedildi</h4>
+                    <p>"Siber Güvenlik Atölyesi" için talep ettiğiniz 50 adet ek sandalye, depodaki stok yetersizliği nedeniyle şu an karşılanamamaktadır.</p>
+                    <span class="notif-time">Dün, 14:20</span>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+</body>
+</html>

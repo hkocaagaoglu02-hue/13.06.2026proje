@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SKS | Detaylı İnceleme</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        /* MASTER SIDEBAR VE ANA YAPI AYARLARI - %100 KORUNDU */
+        body { margin: 0; font-family: 'Inter', sans-serif; display: flex; min-height: 100vh; background-color: #f8f9fa; }
+        .sidebar { width: 280px; background-color: #0f172a; color: white; padding: 40px 20px; display: flex; flex-direction: column; border-right: 1px solid rgba(0,0,0,0.1); position: fixed; height: 100vh; box-sizing: border-box; }
+        .profile-section { text-align: center; margin-bottom: 40px; }
+        .profile-img { width: 70px; height: 70px; background: #3b82f6; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-weight: 800; }
+        .menu-item { display: flex; align-items: center; gap: 12px; padding: 15px; color: rgba(255,255,255,0.6); text-decoration: none; border-radius: 12px; margin-bottom: 8px; transition: 0.3s; }
+        .menu-item.active { background: rgba(59, 130, 246, 0.2); color: #60a5fa; font-weight: 600; }
+        .menu-item:hover:not(.active) { background: rgba(255,255,255,0.05); color: white; }
+        .main-content { margin-left: 280px; flex: 1; padding: 50px 80px; background-color: #f8f9fa; }
+        .sidebar-footer { margin-top: auto; }
+        .logout-btn { width: 100%; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 10px; cursor: pointer; }
+
+        /* REVİZE EDİLMİŞ İNCELEME ALANI STİLLERİ */
+        .back-link { text-decoration: none; color: #64748b; font-weight: 600; font-size: 0.9rem; display: inline-flex; align-items: center; margin-bottom: 25px; transition: 0.2s; }
+        .back-link:hover { color: #3b82f6; }
+
+        .app-container { display: grid; grid-template-columns: 1fr 350px; gap: 40px; align-items: start; }
+
+        /* SOL TARAF: İÇERİK */
+        .document-card { background: white; padding: 40px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.03); border: 1px solid #edf2f7; }
+        .doc-header { border-bottom: 2px solid #f8f9fa; padding-bottom: 20px; margin-bottom: 30px; }
+        .doc-header h2 { font-size: 1.8rem; color: #0f172a; margin: 0; font-weight: 800; }
+        .doc-header .badge { background: #eff6ff; color: #3b82f6; padding: 6px 14px; border-radius: 100px; font-size: 0.8rem; font-weight: 700; margin-top: 10px; display: inline-block; }
+
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 40px; }
+        .info-item label { display: block; color: #94a3b8; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+        .info-item span { display: block; color: #1e293b; font-weight: 600; font-size: 1rem; }
+
+        .description-box { background: #f8fafc; padding: 25px; border-radius: 16px; border-left: 4px solid #3b82f6; margin-bottom: 30px; }
+        .description-box h4 { margin: 0 0 12px 0; color: #0f172a; font-size: 1rem; }
+        .description-box p { color: #475569; line-height: 1.7; margin: 0; font-size: 0.95rem; }
+
+        /* SAĞ TARAF: AKSİYON PANELİ */
+        .action-sidebar { background: white; padding: 30px; border-radius: 24px; border: 1px solid #edf2f7; box-shadow: 0 10px 30px rgba(0,0,0,0.03); position: sticky; top: 40px; }
+        .action-sidebar h3 { font-size: 1.1rem; margin-top: 0; margin-bottom: 20px; color: #0f172a; }
+        
+        .note-label { display: block; color: #64748b; font-size: 0.85rem; font-weight: 600; margin-bottom: 10px; }
+        .note-textarea { width: 100%; border: 1px solid #e2e8f0; border-radius: 12px; padding: 15px; font-family: inherit; font-size: 0.9rem; resize: none; box-sizing: border-box; margin-bottom: 20px; transition: 0.3s; }
+        .note-textarea:focus { border-color: #3b82f6; outline: none; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1); }
+
+        .btn-group { display: flex; flex-direction: column; gap: 12px; }
+        .primary-btn { background: #3b82f6; color: white; padding: 14px; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; text-align: center; }
+        .primary-btn:hover { background: #2563eb; transform: translateY(-2px); }
+        
+        .outline-btn { background: white; color: #475569; padding: 12px; border: 1px solid #e2e8f0; border-radius: 12px; font-weight: 600; cursor: pointer; transition: 0.3s; text-decoration: none; text-align: center; }
+        .outline-btn:hover { background: #f8fafc; border-color: #cbd5e1; }
+        .btn-red { color: #ef4444; }
+        .btn-red:hover { background: #fef2f2; border-color: #fecaca; }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="profile-section">
+            <div class="profile-img">YA</div>
+            <h4>Dr. Yunus Adıgüzel</h4>
+            <p style="font-size: 0.8rem; color: rgba(255,255,255,0.4);">Akademik Danışman</p>
+        </div>
+
+        <nav class="menu">
+            <a href="akedemikdanisman1.html" class="menu-item">Panel Özeti</a>
+            <a href="akademikdanisman2.html" class="menu-item active">Bekleyen Onaylar</a>
+            <a href="akademikdanisman4.html" class="menu-item">Onaylanan Etkinlikler</a>
+            <a href="akademikdanisman5.html" class="menu-item">Sorumlu Kulüplerim</a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <button class="logout-btn">Güvenli Çıkış</button>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <a href="akademikdanisman2.html" class="back-link">← Başvuru Listesine Dön</a>
+
+        <div class="app-container">
+            <div class="document-card">
+                <div class="doc-header">
+                    <h2>Kariyer Zirvesi '24</h2>
+                    <span class="badge">#SKS-2024-0012</span>
+                </div>
+
+                <div class="info-grid">
+                    <div class="info-item">
+                        <label>Başvuran / Topluluk</label>
+                        <span>Hümeyra Kocaağaoğlu (Yazılım Kulübü)</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Etkinlik Türü</label>
+                        <span>Konferans & Kariyer Günü</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Tarih & Saat</label>
+                        <span>24 Mayıs 2024 | 10:00 - 17:00</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Planlanan Mekan</label>
+                        <span>Merkezi Konferans Salonu</span>
+                    </div>
+                </div>
+
+                <div class="description-box">
+                    <h4>Etkinlik Açıklaması</h4>
+                    <p>
+                        Bu etkinlik, üniversitemiz öğrencilerinin sektörün önde gelen yazılım firmalarıyla bir araya gelmesini hedeflemektedir. Gün boyunca 3 farklı panel ve 2 teknik workshop düzenlenecektir. Katılımcıların staj imkanları hakkında bilgi alması ve network ağlarını geliştirmesi amaçlanmaktadır. Toplam beklenen katılımcı sayısı 250 kişidir.
+                    </p>
+                </div>
+
+                <div class="info-item">
+                    <label>Ekipman & Materyal Talepleri</label>
+                    <p style="color: #475569; font-size: 0.95rem; font-weight: 500;">
+                        • Reji ve canlı yayın desteği<br>
+                        • Giriş alanı için 4 adet stand masası
+                    </p>
+                </div>
+            </div>
+
+            <div class="action-sidebar">
+                <h3>Karar Ver</h3>
+                <label class="note-label">Danışman Görüşü (Opsiyonel)</label>
+                <textarea class="note-textarea" rows="5" placeholder="Öğrenciye iletmek istediğiniz notları veya revize taleplerinizi buraya yazın..."></textarea>
+                
+                <div class="btn-group">
+                    <a href="akademikdanisman2.html" class="primary-btn">✓ Başvuruyu Onayla</a>
+                    <a href="akademikdanisman2.html" class="outline-btn">⚠ Revize İste</a>
+                    <a href="akademikdanisman2.html" class="outline-btn btn-red">✕ Reddet</a>
+                </div>
+                
+                <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid #f1f5f9;">
+                    <p style="font-size: 0.75rem; color: #94a3b8; line-height: 1.4;">
+                        <b>Not:</b> Onayladığınızda başvuru otomatik olarak SKS Daire Başkanlığı onayına gönderilecektir.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

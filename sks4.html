@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SKS | Mekan Yönetimi</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        /* MASTER SIDEBAR VE ANA YAPI - %100 TUTARLI */
+        body { margin: 0; font-family: 'Inter', sans-serif; display: flex; min-height: 100vh; background-color: #f8f9fa; }
+        .sidebar { width: 280px; background-color: #0f172a; color: white; padding: 40px 20px; display: flex; flex-direction: column; border-right: 1px solid rgba(0,0,0,0.1); position: fixed; height: 100vh; box-sizing: border-box; z-index: 90; }
+        .profile-section { text-align: center; margin-bottom: 40px; }
+        .profile-img { width: 70px; height: 70px; background: #10b981; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-weight: 800; }
+        .menu-item { display: flex; align-items: center; gap: 12px; padding: 15px; color: rgba(255,255,255,0.6); text-decoration: none; border-radius: 12px; margin-bottom: 8px; transition: 0.3s; }
+        .menu-item.active { background: rgba(16, 185, 129, 0.2); color: #34d399; font-weight: 600; }
+        .menu-item:hover:not(.active) { background: rgba(255,255,255,0.05); color: white; }
+        .main-content { margin-left: 280px; flex: 1; padding: 50px 80px; background-color: #f8f9fa; box-sizing: border-box; }
+        .sidebar-footer { margin-top: auto; }
+        .logout-btn { width: 100%; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 10px; cursor: pointer; }
+
+        /* MEKAN YÖNETİMİ ALT ALTA (ROW) MİMARİSİ */
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 35px; }
+        .add-btn { background: #10b981; color: white; padding: 12px 24px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 8px; font-size: 0.85rem; }
+        .add-btn:hover { background: #059669; }
+
+        /* Alt Alta Liste Yapısı */
+        .venue-list { display: flex; flex-direction: column; gap: 20px; width: 100%; }
+        
+        /* Yatay Kart Tasarımı */
+        .venue-card { background: white; border-radius: 20px; border: 1px solid #edf2f7; overflow: hidden; transition: 0.2s; display: flex; flex-direction: row; box-shadow: 0 4px 15px rgba(0,0,0,0.02); min-height: 140px; }
+        .venue-card:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,0.04); border-color: #cbd5e1; }
+        
+        /* Sol Taraf Görsel Alanı */
+        .venue-image { width: 220px; min-width: 220px; background: #e2e8f0; position: relative; }
+        
+        /* Durum Badge Çeşitleri */
+        .status-badge { padding: 6px 12px; border-radius: 8px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; display: inline-block; width: fit-content; }
+        .status-available { background: rgba(22, 163, 74, 0.15); color: #16a34a; }
+        .status-busy { background: rgba(219, 39, 119, 0.15); color: #db2777; }
+        .status-maintenance { background: rgba(234, 88, 12, 0.15); color: #ea580c; }
+
+        /* Orta Bölüm - İçerik Detayları */
+        .venue-body { padding: 25px; flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 6px; }
+        .venue-body h3 { margin: 0; color: #0f172a; font-size: 1.25rem; font-weight: 700; }
+        .venue-location { color: #64748b; font-size: 0.88rem; font-weight: 500; }
+
+        /* Özellik Etiketleri */
+        .venue-features { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
+        .feature-tag { background: #f1f5f9; color: #475569; padding: 6px 12px; border-radius: 8px; font-size: 0.78rem; font-weight: 600; }
+
+        /* Sağ Taraf - Durum ve Sadece Düzenle Aksiyonu */
+        .venue-action-zone { width: 200px; min-width: 200px; padding: 25px; border-left: 1px solid #edf2f7; background: #f8fafc; display: flex; flex-direction: column; justify-content: center; align-items: flex-end; gap: 15px; }
+        .btn-venue-action { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid #e2e8f0; background: white; font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: 0.2s; color: #475569; font-family: inherit; text-align: center; }
+        .btn-venue-action:hover { background: #f1f5f9; color: #0f172a; border-color: #cbd5e1; }
+
+        /* =========================================
+           GÜVENLİ VE İZOLE YAN PANEL (OVERLAY MODELİ)
+           ========================================= */
+        .side-panel {
+            position: fixed;
+            top: 0; right: -440px; 
+            width: 420px; height: 100vh;
+            background-color: white;
+            box-shadow: -15px 0 40px rgba(0,0,0,0.08); 
+            border-left: 1px solid #e2e8f0;
+            transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 40px 30px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            z-index: 200;
+        }
+        .side-panel.open { right: 0; }
+
+        .panel-close-btn {
+            position: absolute; top: 35px; right: 30px;
+            background: #f1f5f9; border: none; width: 35px; height: 35px;
+            border-radius: 50%; cursor: pointer; font-weight: bold; color: #475569;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .panel-close-btn:hover { background: #e2e8f0; }
+
+        .panel-title { color: #0f172a; font-size: 1.5rem; font-weight: 800; margin-bottom: 5px; margin-top: 10px; }
+        .panel-subtitle { color: #64748b; font-size: 0.9rem; margin-bottom: 30px; }
+
+        /* Form Elemanları */
+        .form-group { margin-bottom: 16px; display: flex; flex-direction: column; gap: 6px; }
+        .form-group label { font-size: 0.78rem; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.5px; }
+        .form-control {
+            width: 100%; padding: 12px 14px; background: #f8fafc;
+            border: 1px solid #e2e8f0; border-radius: 10px;
+            color: #0f172a; font-size: 0.9rem; outline: none; transition: 0.2s; box-sizing: border-box; font-family: inherit;
+        }
+        .form-control:focus { border-color: #10b981; background: white; box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.08); }
+        
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        
+        .submit-btn {
+            background: #10b981; color: white; padding: 14px; border: none;
+            border-radius: 12px; font-weight: 700; font-size: 0.9rem; cursor: pointer;
+            transition: 0.2s; margin-top: 10px; font-family: inherit;
+        }
+        .submit-btn:hover { background: #059669; }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR PANELİ -->
+    <aside class="sidebar">
+        <div class="profile-section">
+            <div class="profile-img">GT</div>
+            <h4>Gürhan Toktaş</h4>
+            <p style="font-size: 0.8rem; color: rgba(255,255,255,0.4);">SKS Daire Bşk.</p>
+        </div>
+        <nav class="menu">
+            <a href="sks1.html" class="menu-item">Genel Bakış</a>
+            <a href="sks2.html" class="menu-item">Heyet Onayları</a>
+            <a href="sks4.html" class="menu-item active">Mekan Yönetimi</a>
+            <a href="sks6.html" class="menu-item">Kulüp Yönetimi</a>
+            <a href="sks5.html" class="menu-item">Raporlar</a>
+        </nav>
+        <div class="sidebar-footer">
+            <button class="logout-btn">Güvenli Çıkış</button>
+        </div>
+    </aside>
+
+    <!-- ANA İÇERİK ALANI -->
+    <main class="main-content" id="mainContent">
+        <header class="page-header">
+            <div>
+                <h2 style="margin:0; font-size: 1.5rem; color: #0f172a; font-weight: 800;">Mekan Yönetimi</h2>
+                <p style="margin:5px 0 0; color: #64748b; font-size: 0.9rem;">Kampüs genelindeki etkinlik alanlarının durumunu ve teknik detaylarını yönetin.</p>
+            </div>
+            <button class="add-btn" onclick="openAddPanel()">+ Yeni Mekan Ekle</button>
+        </header>
+
+        <!-- ALT ALTA SIRALANAN MİMARİ (LIST) -->
+        <section class="venue-list" id="venueGrid">
+            
+            <!-- Mekan 1 -->
+            <div class="venue-card" id="venue-1">
+                <div class="venue-image" style="background: url('https://filehost.29mayis.edu.tr/upload/2020/06/18/galeri-15.jpg') center/cover;"></div>
+                <div class="venue-body">
+                    <h3>Konferans Salonu A</h3>
+                    <span class="venue-location">📍 Kültür Merkezi, 1. Kat</span>
+                    <div class="venue-features">
+                        <span class="feature-tag" data-capacity="500">👤 500 Kişilik</span>
+                        <span class="feature-tag">🔊 Ses Sistemi</span>
+                        <span class="feature-tag">📽️ Projeksiyon</span>
+                    </div>
+                </div>
+                <div class="venue-action-zone">
+                    <span class="status-badge status-available" data-status="available">MÜSAİT</span>
+                    <button class="btn-venue-action" onclick="openEditPanel('venue-1')">⚙️ Düzenle</button>
+                </div>
+            </div>
+
+            <!-- Mekan 2 -->
+            <div class="venue-card" id="venue-2">
+                <div class="venue-image" style="background: url('https://filehost.29mayis.edu.tr/upload/2020/06/18/galeri-28.jpg') center/cover;"></div>
+                <div class="venue-body">
+                    <h3>Cep Sineması</h3>
+                    <span class="venue-location">📍 Öğrenci Merkezi, Zemin Kat</span>
+                    <div class="venue-features">
+                        <span class="feature-tag" data-capacity="80">👤 80 Kişilik</span>
+                        <span class="feature-tag">🎬 Sinema Perdesi</span>
+                        <span class="feature-tag">🍿 İkram Uygun</span>
+                    </div>
+                </div>
+                <div class="venue-action-zone">
+                    <span class="status-badge status-busy" data-status="busy">REZERVE</span>
+                    <button class="btn-venue-action" onclick="openEditPanel('venue-2')">⚙️ Düzenle</button>
+                </div>
+            </div>
+
+            <!-- Mekan 3 -->
+            <div class="venue-card" id="venue-3">
+                <div class="venue-image" style="background: url('https://filehost.29mayis.edu.tr/upload/2020/06/18/galeri-12.jpg') center/cover;"></div>
+                <div class="venue-body">
+                    <h3>Amfi Tiyatro</h3>
+                    <span class="venue-location">📍 Kampüs Meydanı</span>
+                    <div class="venue-features">
+                        <span class="feature-tag" data-capacity="2500">👤 2500 Kişilik</span>
+                        <span class="feature-tag">☀️ Açık Alan</span>
+                        <span class="feature-tag">🎭 Sahne</span>
+                    </div>
+                </div>
+                <div class="venue-action-zone">
+                    <span class="status-badge status-maintenance" data-status="maintenance">BAKIMDA</span>
+                    <button class="btn-venue-action" onclick="openEditPanel('venue-3')">⚙️ Düzenle</button>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <!-- DİNAMİK YAN PANEL (DRAWER FORM) -->
+    <div id="addVenuePanel" class="side-panel">
+        <button class="panel-close-btn" onclick="closePanel()">✕</button>
+        <h2 class="panel-title" id="panelMainTitle">Mekan Tanımla</h2>
+        <p class="panel-subtitle" id="panelSubTitle">Sisteme eklenecek yeni salon veya alanın detaylarını doldurun.</p>
+        
+        <form id="newVenueForm" onsubmit="saveVenue(event)" style="display: flex; flex-direction: column; overflow-y: auto; flex: 1; padding-right: 5px;">
+            <!-- Hangi kartın düzenlendiğini takip etmek için gizli input -->
+            <input type="hidden" id="editTargetId" value="">
+
+            <div class="form-group">
+                <label for="vName">Mekan Adı</label>
+                <input type="text" id="vName" class="form-control" placeholder="Örn: İnovasyon Laboratuvarı" required>
+            </div>
+
+            <div class="form-group">
+                <label for="vLocation">Konum / Yerleşke</label>
+                <input type="text" id="vLocation" class="form-control" placeholder="Örn: Mühendislik Fakültesi, B Blok" required>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="vCapacity">Kapasite (Kişi)</label>
+                    <input type="number" id="vCapacity" class="form-control" placeholder="Örn: 120" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="vStatus">Durumu</label>
+                    <select id="vStatus" class="form-control">
+                        <option value="available">Müsait</option>
+                        <option value="busy">Rezerve / Dolu</option>
+                        <option value="maintenance">Bakımda</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="vFeatures">Öne Çıkan Özellikler (Virgülle Ayırın)</label>
+                <input type="text" id="vFeatures" class="form-control" placeholder="Örn: Akıllı Tahta, Klima, Sahne">
+            </div>
+
+            <div class="form-group">
+                <label for="vImage">Mekan Görsel URL (Opsiyonel)</label>
+                <input type="url" id="vImage" class="form-control" placeholder="https://example.com/image.jpg">
+            </div>
+
+            <button type="submit" class="submit-btn" id="formSubmitBtn">Mekanı Sisteme Ekle</button>
+        </form>
+    </div>
+
+    <!-- JAVASCRIPT AKSIYON VE DÜZENLEME MANTIĞI -->
+    <script>
+        // "Yeni Ekle" modu için paneli temiz açma fonksiyonu
+        function openAddPanel() {
+            document.getElementById('editTargetId').value = ""; // hedefi sıfırla
+            document.getElementById('newVenueForm').reset();
+            document.getElementById('panelMainTitle').innerText = "Mekan Tanımla";
+            document.getElementById('panelSubTitle').innerText = "Sisteme eklenecek yeni salon veya alanın detaylarını doldurun.";
+            document.getElementById('formSubmitBtn').innerText = "Mekanı Sisteme Ekle";
+            document.getElementById('addVenuePanel').classList.add('open');
+        }
+
+        // "Düzenle" modu için verileri çekip paneli açma fonksiyonu
+        function openEditPanel(cardId) {
+            const card = document.getElementById(cardId);
+            document.getElementById('editTargetId').value = cardId; // Düzenlenecek kartı hafızaya al
+            
+            // Mevcut kart değerlerini yakala
+            const name = card.querySelector('h3').innerText;
+            const location = card.querySelector('.venue-location').innerText.replace('📍 ', '');
+            const capacityTag = card.querySelector('[data-capacity]');
+            const capacity = capacityTag ? capacityTag.getAttribute('data-capacity') : "100";
+            const status = card.querySelector('[data-status]').getAttribute('data-status');
+            
+            // Özellikleri toparla (Kapasite etiketi dışındakileri virgülle birleştir)
+            const featureTags = card.querySelectorAll('.feature-tag');
+            let featuresArr = [];
+            featureTags.forEach(tag => {
+                if(!tag.hasAttribute('data-capacity')) {
+                    featuresArr.push(tag.innerText.replace('🔹 ', ''));
+                }
+            });
+            
+            // Arka plan resmini inline style'dan ayrıştır
+            const bgUrl = card.querySelector('.venue-image').style.backgroundImage.slice(5, -2);
+
+            // Form alanlarına değerleri ata
+            document.getElementById('vName').value = name;
+            document.getElementById('vLocation').value = location;
+            document.getElementById('vCapacity').value = capacity;
+            document.getElementById('vStatus').value = status;
+            document.getElementById('vFeatures').value = featuresArr.join(', ');
+            document.getElementById('vImage').value = bgUrl.includes('placeholder') ? '' : bgUrl;
+
+            // Paneli güncelleme moduna sok
+            document.getElementById('panelMainTitle').innerText = "Mekanı Düzenle";
+            document.getElementById('panelSubTitle').innerText = "Seçilen alanın teknik özelliklerini ve doluluk durumunu güncelleyin.";
+            document.getElementById('formSubmitBtn').innerText = "Değişiklikleri Kaydet";
+            
+            document.getElementById('addVenuePanel').classList.add('open');
+        }
+
+        function closePanel() {
+            document.getElementById('addVenuePanel').classList.remove('open');
+        }
+
+        function saveVenue(event) {
+            event.preventDefault();
+
+            const targetId = document.getElementById('editTargetId').value;
+            const name = document.getElementById('vName').value;
+            const location = document.getElementById('vLocation').value;
+            const capacity = document.getElementById('vCapacity').value;
+            const status = document.getElementById('vStatus').value;
+            const featuresInput = document.getElementById('vFeatures').value;
+            let imageUrl = document.getElementById('vImage').value;
+
+            if(!imageUrl) {
+                imageUrl = "https://images.unsplash.com/photo-1521587760476-6c12a4b040da?auto=format&fit=crop&q=80&w=600";
+            }
+
+            // Durum atamaları
+            let statusClass = 'status-available';
+            let statusText = 'MÜSAİT';
+            if(status === 'busy') {
+                statusClass = 'status-busy';
+                statusText = 'REZERVE';
+            } else if(status === 'maintenance') {
+                statusClass = 'status-maintenance';
+                statusText = 'BAKIMDA';
+            }
+
+            // Özellik listesi üretme
+            let featuresHTML = `<span class="feature-tag" data-capacity="${capacity}">👤 ${capacity} Kişilik</span>`;
+            if(featuresInput.trim() !== "") {
+                const featuresArray = featuresInput.split(',');
+                featuresArray.forEach(feat => {
+                    if(feat.trim() !== "") {
+                        featuresHTML += `<span class="feature-tag">🔹 ${feat.trim()}</span>`;
+                    }
+                });
+            }
+
+            if(targetId === "") {
+                // YENİ KAYIT MODU
+                const newId = 'venue-' + Date.now();
+                const list = document.getElementById('venueGrid');
+                const newCard = document.createElement('div');
+                newCard.className = 'venue-card';
+                newCard.id = newId;
+                newCard.innerHTML = `
+                    <div class="venue-image" style="background: url('${imageUrl}') center/cover;"></div>
+                    <div class="venue-body">
+                        <h3>${name}</h3>
+                        <span class="venue-location">📍 ${location}</span>
+                        <div class="venue-features">
+                            ${featuresHTML}
+                        </div>
+                    </div>
+                    <div class="venue-action-zone">
+                        <span class="status-badge ${statusClass}" data-status="${status}">${statusText}</span>
+                        <button class="btn-venue-action" onclick="openEditPanel('${newId}')">⚙️ Düzenle</button>
+                    </div>
+                `;
+                list.insertBefore(newCard, list.firstChild);
+            } else {
+                // MEVCUT KARTI DÜZENLEME MODU
+                const card = document.getElementById(targetId);
+                card.querySelector('.venue-image').style.backgroundImage = `url('${imageUrl}')`;
+                card.querySelector('h3').innerText = name;
+                card.querySelector('.venue-location').innerText = `📍 ${location}`;
+                card.querySelector('.venue-features').innerHTML = featuresHTML;
+                
+                const actionZone = card.querySelector('.venue-action-zone');
+                actionZone.innerHTML = `
+                    <span class="status-badge ${statusClass}" data-status="${status}">${statusText}</span>
+                    <button class="btn-venue-action" onclick="openEditPanel('${targetId}')">⚙️ Düzenle</button>
+                `;
+            }
+
+            document.getElementById('newVenueForm').reset();
+            closePanel();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SKS Giriş | İstanbul 29 Mayıs Üniversitesi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        /* TEMEL AYARLAR */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f1f5f9; /* Ferah açık gri arka plan */
+            color: #152238;
+            display: flex; justify-content: center; align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* ANA KONTEYNIR */
+        .login-container {
+            display: flex;
+            width: 100%;
+            max-width: 1100px;
+            background: white;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.06);
+            border: 1px solid #e2e8f0;
+        }
+
+        /* SOL FORM ALANI (AÇIK TEMA) */
+        .login-wrapper {
+            flex: 0.8;
+            padding: 50px 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: #ffffff;
+        }
+
+        /* ORTALANMIŞ LOGO VE BAŞLIK ALANI */
+        .logo-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .logo-section .logo-box {
+            width: 70px; height: 70px; 
+            background: #ff453a; /* Sevdiğin o canlı eski dinamik renk */
+            border-radius: 18px; display: flex; align-items: center; justify-content: center;
+            color: white; font-weight: 800; margin-bottom: 20px;
+            box-shadow: 0 8px 20px rgba(255, 69, 58, 0.25);
+            font-size: 1.2rem;
+            letter-spacing: 0.5px;
+        }
+        
+        .logo-section h1 { color: #152238; font-size: 2rem; margin: 0; letter-spacing: -1px; font-weight: 800; }
+        .logo-section p { color: #64748b; margin-top: 6px; font-size: 0.9rem; font-weight: 500; }
+
+        .login-card {
+            width: 100%;
+        }
+        .login-card h3 { color: #152238; margin-bottom: 25px; font-weight: 700; font-size: 1.2rem; text-align: center; opacity: 0.9; }
+
+        /* INPUT GRUPLARI */
+        .input-group { margin-bottom: 20px; width: 100%; }
+        .input-group label { display: block; color: #475569; margin-bottom: 8px; font-size: 0.85rem; font-weight: 600; }
+        .input-group input {
+            width: 100%; padding: 15px 16px; border-radius: 12px;
+            border: 1px solid #e2e8f0; background: #f8fafc;
+            color: #152238; outline: none; transition: 0.3s;
+            font-size: 0.95rem;
+        }
+        .input-group input:focus {
+            background: white;
+            border-color: #152238; /* Odaklanınca asil kurumsal lacivert */
+            box-shadow: 0 0 0 4px rgba(21, 34, 56, 0.06);
+        }
+
+        /* BUTON */
+        .btn-login {
+            width: 100%; padding: 16px; background: #152238;
+            border: none; border-radius: 12px; color: white; font-weight: 700; cursor: pointer;
+            font-size: 1rem; margin-top: 10px; transition: 0.3s;
+            letter-spacing: 0.5px;
+        }
+        .btn-login:hover { background: #1e2f4d; transform: translateY(-2px); box-shadow: 0 10px 20px rgba(21, 34, 56, 0.15); }
+
+        .forgot-pass { display: block; text-align: center; margin-top: 25px; color: #94a3b8; text-decoration: none; font-size: 0.85rem; font-weight: 500; transition: 0.2s; }
+        .forgot-pass:hover { color: #152238; }
+
+        .login-footer { margin-top: 45px; color: #94a3b8; font-size: 0.8rem; border-top: 1px solid #f1f5f9; padding-top: 20px; text-align: center; }
+
+        /* SAĞ AFİŞ PANELİ */
+        .afis-panel {
+            flex: 1.2;
+            background: #f8fafc;
+            padding: 40px;
+            height: 700px;
+            overflow-y: auto;
+            border-left: 1px solid #edf2f7;
+        }
+
+        .afis-panel::-webkit-scrollbar { width: 5px; }
+        .afis-panel::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+
+        .afis-title { color: #152238; font-weight: 800; font-size: 0.85rem; margin-bottom: 30px; letter-spacing: 2px; text-transform: uppercase; opacity: 0.7; }
+
+        .afis-item {
+            background: white; border-radius: 20px; margin-bottom: 25px;
+            overflow: hidden; border: 1px solid #e2e8f0;
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.01);
+        }
+        .afis-item:hover { transform: translateY(-6px); box-shadow: 0 15px 30px rgba(21, 34, 56, 0.05); border-color: #152238; }
+
+        .afis-img-placeholder {
+            width: 100%; height: 160px;
+            background: linear-gradient(135deg, #152238, #233654);
+            display: flex; align-items: center; justify-content: center;
+            color: rgba(255,255,255,0.25); font-weight: 800; font-size: 1.1rem; letter-spacing: 1px;
+        }
+        .afis-content { padding: 20px; }
+        .afis-content h4 { margin: 0; color: #152238; font-size: 1.1rem; font-weight: 700; }
+        .afis-content p { color: #64748b; font-size: 0.85rem; margin-top: 8px; font-weight: 500; }
+
+        /* RESPONSIVE */
+        @media (max-width: 950px) {
+            .login-container { flex-direction: column; height: auto; }
+            .login-wrapper { flex: 1; padding: 40px 30px; }
+            .afis-panel { border-left: none; border-top: 1px solid #edf2f7; height: auto; padding: 30px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <main class="login-wrapper">
+            <header class="logo-section">
+                <div class="logo-box">SKS</div>
+                <h1>SKS PORTAL</h1>
+                <p>İstanbul 29 Mayıs Üniversitesi Ortak Giriş Sistemi</p>
+            </header>
+
+            <section class="login-card">
+                <h3>Sisteme Giriş Yapın</h3>
+                <form id="loginForm" onsubmit="handleLogin(event)">
+                    <div class="input-group">
+                        <label for="username">Kullanıcı Kimliği</label>
+                        <input type="text" id="username" placeholder="Öğrenci No / Personel ID" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="password">Şifre</label>
+                        <input type="password" id="password" placeholder="••••••••" required>
+                    </div>
+                    <button type="submit" class="btn-login">Sisteme Bağlan</button>
+                    <a href="#" class="forgot-pass">Şifrenizi mi unuttunuz?</a>
+                </form>
+            </section>
+
+            <footer class="login-footer">
+                <p>© 2026 İstanbul 29 Mayıs Üniversitesi</p>
+                <small>Sağlık Kültür ve Spor Daire Başkanlığı</small>
+            </footer>
+        </main>
+
+        <aside class="afis-panel">
+            <div class="afis-title">Kampüste Bu Ay</div>
+
+            <div class="afis-item">
+                <div class="afis-img-placeholder">YBS ZİRVESİ '26</div>
+                <div class="afis-content">
+                    <h4>Bilişimde Kariyer Günleri</h4>
+                    <p>📅 12 Nisan | 📍 Konferans Salonu A</p>
+                </div>
+            </div>
+
+            <div class="afis-item">
+                <div class="afis-img-placeholder">BAHAR ŞENLİĞİ</div>
+                <div class="afis-content">
+                    <h4>Açık Hava Konseri</h4>
+                    <p>📅 20 Nisan | 📍 Kampüs Bahçesi</p>
+                </div>
+            </div>
+
+            <div class="afis-item">
+                <div class="afis-img-placeholder">TEKNOLOJİ WORKSHOP</div>
+                <div class="afis-content">
+                    <h4>AI ve Gelecek Eğitimi</h4>
+                    <p>📅 28 Nisan | 📍 Lab-4</p>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <script>
+        function handleLogin(event) {
+            event.preventDefault();
+            // sks1.html (Genel Bakış) sayfasına pürüzsüz geçiş
+            window.location.href = "sks1.html";
+        }
+    </script>
+
+</body>
+</html>

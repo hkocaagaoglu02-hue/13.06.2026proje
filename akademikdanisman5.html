@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SKS Panel | Sorumlu Kulüplerim</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        /* MASTER SIDEBAR VE ANA YAPI - DİĞER SAYFALARLA BİREBİR AYNI */
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+        }
+
+        .sidebar {
+            width: 280px;
+            background-color: #0f172a;
+            color: white;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid rgba(0,0,0,0.1);
+            position: fixed;
+            height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .profile-section { text-align: center; margin-bottom: 40px; }
+        .profile-img { 
+            width: 70px; height: 70px; background: #3b82f6; 
+            border-radius: 50%; margin: 0 auto 15px;
+            display: flex; align-items: center; justify-content: center; font-weight: 800;
+        }
+
+        .menu-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 15px; color: rgba(255,255,255,0.6);
+            text-decoration: none; border-radius: 12px; margin-bottom: 8px;
+            transition: 0.3s;
+        }
+        .menu-item.active { background: rgba(255,255,255,0.1); color: white; font-weight: 600; }
+        .menu-item:hover:not(.active) { background: rgba(255,255,255,0.05); color: white; }
+
+        .main-content {
+            margin-left: 280px;
+            flex: 1;
+            padding: 50px 80px;
+            background-color: #f8f9fa;
+        }
+
+        .sidebar-footer { margin-top: auto; }
+        .logout-btn { 
+            width: 100%; padding: 12px; background: rgba(255,255,255,0.05); 
+            border: 1px solid rgba(255,255,255,0.1); color: white; 
+            border-radius: 10px; cursor: pointer;
+        }
+
+        /* %100 DİĞER SAYFALARLA AYNI STRÜKTÜRDEKİ BAŞLIK ALANI */
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 30px;
+        }
+        .header-title h2 {
+            color: #1a2a44;
+            font-size: 2rem;
+            font-weight: 800;
+            margin: 0;
+        }
+        .header-title p {
+            color: #64748b;
+            margin-top: 5px;
+            margin-bottom: 0;
+            font-size: 1rem;
+        }
+
+        /* KULÜP KARTLARI TASARIMI */
+        .clubs-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
+            gap: 25px; 
+        }
+
+        .club-card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 1px solid #edf2f7;
+            transition: transform 0.2s;
+        }
+        .club-card:hover { transform: translateY(-5px); }
+
+        .club-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+        .badge-tech { background: #eff6ff; color: #1e40af; }
+        .badge-art { background: #fef2f2; color: #991b1b; }
+
+        .club-info h3 { margin: 0; color: #1a2a44; font-size: 1.25rem; font-weight: 800; }
+        .club-info p { color: #64748b; font-size: 0.9rem; margin: 10px 0; }
+
+        .club-stats {
+            display: flex;
+            justify-content: space-between;
+            border-top: 1px solid #f1f5f9;
+            padding-top: 15px;
+            margin-top: 15px;
+        }
+        .stat-item { text-align: center; }
+        .stat-label { font-size: 0.7rem; color: #94a3b8; display: block; text-transform: uppercase; }
+        .stat-value { font-weight: 700; color: #1e293b; font-size: 1rem; }
+
+        .btn-detail {
+            width: 100%;
+            margin-top: 20px;
+            padding: 10px;
+            background: #f1f5f9;
+            border: none;
+            border-radius: 10px;
+            color: #475569;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn-detail:hover { background: #e2e8f0; color: #1a2a44; }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="profile-section">
+            <div class="profile-img">YA</div>
+            <h4>Dr. Yunus Adıgüzel</h4>
+            <p style="font-size: 0.8rem; color: rgba(255,255,255,0.4);">Akademik Danışman</p>
+        </div>
+
+        <nav class="menu">
+            <a href="akedemikdanisman1.html" class="menu-item">Panel Özeti</a>
+            <a href="akademikdanisman2.html" class="menu-item">Bekleyen Onaylar</a>
+            <a href="akademikdanisman4.html" class="menu-item">Onaylanan Etkinlikler</a>
+            <a href="akademikdanisman5.html" class="menu-item active">Sorumlu Kulüplerim</a>
+        </nav>
+        
+        <div class="sidebar-footer">
+            <button class="logout-btn">Güvenli Çıkış</button>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="content-header">
+            <div class="header-title">
+                <h2>Sorumlu Kulüplerim</h2>
+                <p>Yönetiminiz altındaki toplulukların kurumsal verileri, üye metrikleri ve güncel faaliyet istatistikleri.</p>
+            </div>
+        </header>
+
+        <section class="clubs-grid">
+            <div class="club-card">
+                <span class="club-badge badge-tech">Teknoloji & Yazılım</span>
+                <div class="club-info">
+                    <h3>Yazılım ve Bilişim Kulübü</h3>
+                    <p>Yapay zeka ve web teknolojileri üzerine odaklanan aktif bir topluluk.</p>
+                </div>
+                <div class="club-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Üye</span>
+                        <span class="stat-value">124</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Etkinlik</span>
+                        <span class="stat-value">8</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Onay Bekleyen</span>
+                        <span class="stat-value" style="color: #ff453a;">3</span>
+                    </div>
+                </div>
+                <button onclick="window.location.href='akademikdanisman6.html'" class="btn-detail">Kulüp Detayına Git</button>
+            </div>
+
+            <div class="club-card">
+                <span class="club-badge badge-art">Kültür & Sanat</span>
+                <div class="club-info">
+                    <h3>Tiyatro Topluluğu</h3>
+                    <p>Geleneksel ve modern tiyatro eserlerini sahneleyen köklü bir kulüp.</p>
+                </div>
+                <div class="club-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Üye</span>
+                        <span class="stat-value">45</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Etkinlik</span>
+                        <span class="stat-value">2</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Onay Bekleyen</span>
+                        <span class="stat-value">0</span>
+                    </div>
+                </div>
+                <button onclick="window.location.href='akademikdanisman6.html'" class="btn-detail">Kulüp Detayına Git</button>
+            </div>
+        </section>
+    </main>
+
+</body>
+</html>

@@ -1,0 +1,587 @@
+/* =========================================
+   1. DEĞİŞKENLER VE TEMEL SIFIRLAMA
+   ========================================= */
+:root {
+    --primary-blue: #2b4b7c;    /* Ana Kurumsal Lacivert */
+    --sidebar-bg: #1a2a44;      /* Sidebar Koyu Mavi */
+    --bg-light: #f4f7fa;        /* Genel Arka Plan Gri-Mavi */
+    --white: #ffffff;
+    --text-main: #333333;
+    --text-muted: #718096;
+    --border-color: #e0e0e0;
+    
+    /* Durum Renkleri */
+    --success: #38a169;
+    --warning: #dd6b20;
+    --danger: #e53e3e;
+    
+    /* Tasarım Standartları */
+    --radius: 12px;
+    --shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    line-height: 1.6;
+}
+
+/* =========================================
+   2. GİRİŞ SAYFASI (LOGIN) ÖZEL STİLLERİ
+   ========================================= */
+/* Giriş ekranını dikey/yatay ortalar */
+body:has(.login-container) {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--white);
+}
+
+.login-container {
+    width: 100%;
+    max-width: 450px;
+    padding: 20px;
+    text-align: center;
+}
+
+.logo-box {
+    width: 90px; height: 90px; background: var(--primary-blue);
+    color: white; display: flex; align-items: center; justify-content: center;
+    border-radius: 20px; margin: 0 auto 25px; font-weight: bold;
+    box-shadow: 0 10px 20px rgba(43, 75, 124, 0.2);
+}
+
+.btn-login {
+    width: 100%; padding: 15px; background-color: var(--primary-blue);
+    color: white; border: none; border-radius: 10px; font-weight: 600;
+    cursor: pointer; transition: 0.3s; margin-bottom: 15px;
+}
+
+.btn-login:hover { background-color: #1e355b; }
+
+/* =========================================
+   3. PANEL (DASHBOARD) GENEL YERLEŞİMİ
+   ========================================= */
+.dashboard-container {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+}
+
+/* Sol Menü (Sidebar) */
+.sidebar {
+    width: 280px;
+    background: var(--sidebar-bg);
+    color: white;
+    padding: 30px 20px;
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+}
+
+.profile-section {
+    text-align: center;
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.profile-img {
+    width: 70px; height: 70px; background: var(--primary-blue);
+    border-radius: 50%; margin: 0 auto 15px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 600; font-size: 1.2rem;
+}
+
+.menu { flex-grow: 1; }
+
+.menu-item {
+    display: flex; align-items: center; color: #a0aec0;
+    text-decoration: none; padding: 12px 15px; border-radius: 10px;
+    margin-bottom: 8px; transition: 0.3s;
+}
+
+.menu-item:hover, .menu-item.active {
+    background: rgba(255,255,255,0.1); color: white;
+}
+
+.menu-item .icon { margin-right: 12px; }
+
+/* Sağ İçerik Alanı */
+.main-content {
+    flex: 1;
+    padding: 40px;
+    overflow-y: auto;
+}
+
+.content-header {
+    display: flex; justify-content: space-between;
+    align-items: center; margin-bottom: 30px;
+}
+
+/* =========================================
+   4. DASHBOARD BİLEŞENLERİ (KARTLAR VE TABLO)
+   ========================================= */
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px; margin-bottom: 40px;
+}
+
+.card {
+    background: var(--white);
+    padding: 25px; border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
+
+.stat-card h3 { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 10px; }
+.stat-card .value { font-size: 2rem; font-weight: 700; color: var(--primary-blue); }
+.eco-card { border-top: 4px solid var(--success); }
+
+.data-table { width: 100%; border-collapse: collapse; }
+.data-table th {
+    text-align: left; padding: 15px; color: var(--text-muted);
+    font-size: 0.85rem; border-bottom: 2px solid var(--bg-light);
+}
+.data-table td { padding: 18px 15px; border-bottom: 1px solid var(--border-color); font-size: 0.9rem; }
+
+/* Durum Rozetleri */
+.status { padding: 6px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+.status.pending { background: #fffaf0; color: var(--warning); }
+.status.approved { background: #f0fff4; color: var(--success); }
+.status.rejected { background: #fff5f5; color: var(--danger); }
+
+/* =========================================
+   5. FORM ÖZEL STİLLERİ (YENİ BAŞVURU)
+   ========================================= */
+.form-section {
+    margin-bottom: 25px;
+}
+
+.section-header {
+    display: flex; align-items: center; margin-bottom: 20px;
+    border-bottom: 2px solid var(--bg-light); padding-bottom: 10px;
+}
+
+.step-num {
+    width: 28px; height: 28px; background: var(--primary-blue); color: white;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    margin-right: 12px; font-size: 0.85rem; font-weight: bold;
+}
+
+.form-section h3 { color: var(--primary-blue); font-size: 1.15rem; }
+
+/* Hizalama Sorunlarını Çözen Grid */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+}
+
+.full-width { grid-column: span 2; }
+
+.input-group label {
+    display: block; font-weight: 600; font-size: 0.
+
+    /* Dinamik gizleme/gösterme kuralı */
+.hidden-section {
+    display: none !important;
+}
+
+/* Bölümler arası boşluk iyileştirmesi */
+.mb-15 {
+    margin-bottom: 15px;
+}
+
+/* Seçim kutularına (Select) profesyonel odaklanma */
+select:focus {
+    border-color: var(--primary-blue);
+    background-color: #f8fafc;
+}
+
+/* Bölüm başlıkları için hafif vurgu */
+.form-section .section-header h3 {
+    text-transform: uppercase;
+    font-size: 1rem;
+    letter-spacing: 0.5px;
+}
+/* Soru sorma kutusu stili */
+.question-box {
+    background: rgba(43, 75, 124, 0.05);
+    padding: 15px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid rgba(43, 75, 124, 0.1);
+}
+
+.question-box label {
+    font-weight: 600;
+    color: var(--primary-blue);
+}
+
+.question-box select {
+    width: auto !important;
+    min-width: 150px;
+}
+
+.mt-20 { margin-top: 20px; }
+
+.hidden-section { display: none; }
+
+/* =========================================
+   7. TAKVİM SAYFASI STİLLERİ
+   ========================================= */
+.calendar-layout {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    gap: 20px;
+}
+
+.calendar-filters h3 { font-size: 1rem; margin-bottom: 15px; color: var(--primary-blue); }
+.filter-group label { display: block; margin-bottom: 10px; cursor: pointer; font-size: 0.9rem; }
+
+.calendar-grid { padding: 0 !important; overflow: hidden; }
+
+.day-names {
+    display: grid; grid-template-columns: repeat(7, 1fr);
+    background: #f8fafc; border-bottom: 1px solid #eee;
+    text-align: center; font-weight: 600; padding: 10px 0;
+}
+
+.days {
+    display: grid; grid-template-columns: repeat(7, 1fr);
+    grid-auto-rows: 100px;
+}
+
+.day {
+    padding: 10px; border-right: 1px solid #eee; border-bottom: 1px solid #eee;
+    font-size: 0.85rem; color: #666;
+}
+
+.day.muted { color: #ccc; }
+.day.event-day { background: #f0f7ff; }
+
+.event-tag {
+    font-size: 0.7rem; padding: 4px 8px; border-radius: 4px;
+    margin-top: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+.event-tag.approved { background: #dcfce7; color: #166534; border-left: 3px solid #22c55e; }
+.event-tag.pending { background: #fef9c3; color: #854d0e; border-left: 3px solid #eab308; }
+
+.dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 5px; }
+.student-id { font-weight: 800 !important; color: #ffffff !important; letter-spacing: 1px; }
+
+/* =========================================
+   8. HAFTALIK TAKVİM (SATIR TASARIMI)
+   ========================================= */
+.weekly-calendar-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.week-row {
+    background: white;
+    border-radius: var(--radius);
+    padding: 15px 25px;
+    display: grid;
+    grid-template-columns: 120px 1fr 100px;
+    align-items: center;
+    box-shadow: var(--shadow);
+    border-left: 8px solid #ccc; /* Varsayılan */
+    transition: transform 0.2s;
+}
+
+.week-row:hover { transform: translateX(5px); }
+
+/* DOLU GÜN - KIRMIZI */
+.status-full {
+    border-left-color: var(--danger);
+    background: #fff5f5;
+}
+.status-full .status-badge {
+    background: var(--danger);
+    color: white;
+}
+.status-full .day-number { color: var(--danger); }
+
+/* MÜSAİT GÜN - YEŞİL */
+.status-available {
+    border-left-color: var(--success);
+    background: #f0fff4;
+}
+.status-available .status-badge {
+    background: var(--success);
+    color: white;
+}
+.status-available .day-number { color: var(--success); }
+
+/* Detay Stilleri */
+.day-info { display: flex; flex-direction: column; }
+.day-name { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; }
+.day-number { font-size: 1.2rem; font-weight: 800; }
+
+.event-details { padding-left: 20px; }
+.event-title { display: block; font-weight: 600; color: var(--primary-blue); }
+.event-time { font-size: 0.85rem; color: var(--text-muted); }
+
+.status-badge {
+    padding: 6px;
+    border-radius: 8px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-align: center;
+    letter-spacing: 0.5px;
+}
+
+.current-week { font-weight: 600; color: var(--primary-blue); }
+
+/* ÇIKIŞ MODAL STİLLERİ */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(21, 34, 56, 0.8); /* Lacivert transparan arka plan */
+    backdrop-filter: blur(5px); /* Arka planı bulanıklaştırır (Premium his) */
+    display: none; /* Başlangıçta gizli */
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-card {
+    background: white;
+    padding: 40px;
+    border-radius: 25px;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+    animation: modalAppear 0.3s ease-out;
+}
+
+@keyframes modalAppear {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.modal-icon { font-size: 3rem; margin-bottom: 15px; }
+
+.modal-card h3 { color: #152238; margin-bottom: 10px; font-weight: 800; }
+.modal-card p { color: #64748b; font-size: 0.95rem; line-height: 1.5; margin-bottom: 25px; }
+
+.modal-buttons { display: flex; gap: 15px; }
+
+.btn-cancel {
+    flex: 1; padding: 12px; border-radius: 10px; border: 1px solid #e2e8f0;
+    background: #f8fafc; color: #64748b; font-weight: 600; cursor: pointer; transition: 0.3s;
+}
+
+.btn-confirm {
+    flex: 1; padding: 12px; border-radius: 10px; border: none;
+    background: #ff453a; color: white; font-weight: 700; cursor: pointer; transition: 0.3s;
+}
+
+.btn-confirm:hover { background: #e03e35; transform: translateY(-2px); }
+.btn-cancel:hover { background: #edf2f7; }
+
+/* =========================================
+   9. MOBIL VE TABLET UYUMLULUK (RESPONSIVE)
+   ========================================= */
+
+/* --- TABLET VE MOBİL BAŞLANGICI (Max-Width: 1024px) --- */
+@media screen and (max-width: 1024px) {
+    /* Ana Taşıyıcı Düzeni Alt Alta Alınır */
+    .dashboard-container {
+        flex-direction: column;
+    }
+
+    /* Sol Menü (Sidebar) Üst Bar Haline Getirilir */
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative; /* Sabit duruş kaldırıldı */
+        padding: 20px;
+        border-right: none;
+        border-bottom: 1px solid rgba(0,0,0,0.1);
+    }
+
+    .profile-section {
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        text-align: left;
+    }
+
+    .profile-img {
+        margin: 0; /* Ortalamayı sıfırla */
+        width: 50px;
+        height: 50px;
+        font-size: 1rem;
+    }
+
+    .profile-section h4, .profile-section p {
+        margin: 0;
+    }
+
+    /* Menü Öğeleri Mobilde Yan Yana Kaydırılabilir Yapıldı */
+    .menu {
+        display: flex;
+        gap: 10px;
+        overflow-x: auto; /* Taşma durumunda sağa kayar */
+        padding-bottom: 5px;
+        scrollbar-width: none; /* Firefox için scroll gizleme */
+    }
+    
+    .menu::-webkit-scrollbar {
+        display: none; /* Chrome/Safari için scroll gizleme */
+    }
+
+    .menu-item {
+        margin-bottom: 0;
+        white-space: nowrap; /* Yazıların kırılmasını önler */
+        padding: 10px 15px;
+    }
+
+    .sidebar-footer {
+        display: none; /* Mobil karmaşayı önlemek için buradaki çıkış gizlendi, alternatif üste eklenebilir */
+    }
+
+    /* Sağ İçerik Alanı Boşluğu Sıfırlanır */
+    .main-content {
+        margin-left: 0 !important;
+        padding: 20px;
+    }
+
+    /* Takvim Düzeni Yan Yana Yapıdan Alt Alta Yapıya Geçer */
+    .calendar-layout {
+        grid-template-columns: 1fr;
+    }
+
+    /* Haftalık Takvim Satırları */
+    .week-row {
+        grid-template-columns: 100px 1fr;
+        gap: 15px;
+    }
+    .week-row .status-badge {
+        grid-column: span 2; /* Badge alt satıra tam otursun */
+        width: 100%;
+    }
+}
+
+/* --- AKILLI TELEFONLAR İÇİN (Max-Width: 768px) --- */
+@media screen and (max-width: 768px) {
+    /* Başlık Alanı */
+    .content-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    /* Form Grid Yapısı Tek Sütuna Düşürülür */
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .full-width, .col-6, .col-4, .col-3 {
+        grid-column: span 12 !important; /* Tüm kolonlar tam genişlik olur */
+    }
+
+    /* Form Butonları Alt Alta ve Tam Genişlik */
+    .form-container form div[style*="justify-content: flex-end"] {
+        flex-direction: column-reverse; /* Vazgeç altta, Kaydet üstte */
+        gap: 10px !important;
+    }
+    
+    .btn-action, .btn-submit, .btn-cancel {
+        width: 100%;
+        text-align: center;
+    }
+
+    /* Tabloları Mobilde Yatayda Kaydırılabilir Yapma (Ekranı Patlatmaz) */
+    .main-content {
+        overflow-x: hidden;
+    }
+    
+    /* Tablonun kapsayıcısına HTML'de class veya doğrudan table'a müdahale */
+    .data-table {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        white-space: nowrap;
+    }
+
+    /* Aylık Takvim Hücre Yükseklikleri Azaltılır */
+    .days {
+        grid-auto-rows: 70px;
+    }
+
+    .day {
+        padding: 5px;
+        font-size: 0.75rem;
+    }
+
+    .event-tag {
+        font-size: 0.6rem;
+        padding: 2px 4px;
+    }
+
+    /* Soru sorma kutusu (Aksiyon Alanları) */
+    .question-box {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .question-box select {
+        width: 100% !important;
+    }
+
+    /* Çıkış Modalı Genişliği */
+    .modal-card {
+        margin: 20px;
+        padding: 25px;
+    }
+    
+    .modal-buttons {
+        flex-direction: column;
+    }
+}
+
+/* --- KÜÇÜK EKRAN TELEFONLAR (Max-Width: 480px) --- */
+@media screen and (max-width: 480px) {
+    .stats-grid {
+        grid-template-columns: 1fr; /* Kartlar tek tek alt alta dizilir */
+    }
+
+    .card {
+        padding: 15px;
+    }
+
+    .stat-card .value {
+        font-size: 1.6rem;
+    }
+
+    .login-container {
+        padding: 15px;
+    }
+} 
+
+bu sayfada sadece gerekli olan değişimleri yap diğer sayfaların yapısı bozulsun istemiyorum

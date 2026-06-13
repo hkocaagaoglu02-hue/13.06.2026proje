@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SKS Panel | Kulüp Künyesi</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        /* MASTER SIDEBAR VE ANA YAPI - SABİT TUTULDU */
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+        }
+
+        .sidebar {
+            width: 280px;
+            background-color: #0f172a;
+            color: white;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid rgba(0,0,0,0.1);
+            position: fixed;
+            height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .profile-section { text-align: center; margin-bottom: 40px; }
+        .profile-img { 
+            width: 70px; height: 70px; background: #3b82f6; 
+            border-radius: 50%; margin: 0 auto 15px;
+            display: flex; align-items: center; justify-content: center; font-weight: 800;
+        }
+
+        .menu-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 15px; color: rgba(255,255,255,0.6);
+            text-decoration: none; border-radius: 12px; margin-bottom: 8px;
+            transition: 0.3s;
+        }
+        .menu-item.active { background: rgba(255,255,255,0.1); color: white; font-weight: 600; }
+        .menu-item:hover:not(.active) { background: rgba(255,255,255,0.05); color: white; }
+
+        .main-content {
+            margin-left: 280px;
+            flex: 1;
+            padding: 40px 60px;
+            background-color: #f8f9fa;
+        }
+
+        /* KÜNYE ÖZEL STİLLERİ */
+        .info-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 25px; margin-top: 30px; }
+        
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+            border: 1px solid #edf2f7;
+            margin-bottom: 25px;
+        }
+
+        .card-title {
+            font-weight: 800;
+            color: #1a2a44;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 2px solid #f8f9fa;
+            padding-bottom: 10px;
+        }
+
+        /* Misyon & Vizyon */
+        .vision-text { color: #64748b; font-size: 0.95rem; line-height: 1.6; font-style: italic; }
+
+        /* Yönetim Listesi */
+        .admin-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .admin-role { font-size: 0.75rem; color: #3b82f6; font-weight: 700; text-transform: uppercase; }
+        .admin-name { font-weight: 600; color: #1a2a44; }
+
+        /* Üye Tablosu */
+        .member-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        .member-table th { text-align: left; padding: 12px; color: #94a3b8; font-size: 0.8rem; border-bottom: 1px solid #f1f5f9; }
+        .member-table td { padding: 12px; font-size: 0.9rem; color: #475569; border-bottom: 1px solid #f8f9fa; }
+
+        .count-badge {
+            background: #152238; color: white; padding: 4px 12px; border-radius: 8px; font-size: 0.9rem;
+        }
+
+        .back-btn {
+            display: inline-flex; align-items: center; gap: 8px; color: #64748b;
+            text-decoration: none; font-weight: 600; margin-bottom: 20px; transition: 0.2s;
+        }
+        .back-btn:hover { color: #1a2a44; }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="profile-section">
+            <div class="profile-img">YA</div>
+            <h4>Dr. Yunus Adıgüzel</h4>
+            <p style="font-size: 0.8rem; color: rgba(255,255,255,0.4);">Akademik Danışman</p>
+        </div>
+        <nav class="menu">
+            <a href="akedemikdanisman1.html" class="menu-item">Panel Özeti</a>
+            <a href="akademikdanisman2.html" class="menu-item">Bekleyen Onaylar</a>
+            <a href="akademikdanisman4.html" class="menu-item">Onaylanan Etkinlikler</a>
+            <a href="akademikdanisman5.html" class="menu-item active">Sorumlu Kulüplerim</a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <button class="logout-btn">Güvenli Çıkış</button>
+        </div>
+
+    </aside>
+
+    <main class="main-content">
+        <a href="akademikdanisman5.html" class="back-btn">← Kulüp Listesine Dön</a>
+        
+        <header style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h2 style="color: #1a2a44; font-size: 2rem; font-weight: 800; margin: 0;">Yazılım ve Bilişim Kulübü</h2>
+                <p style="color: #64748b; margin-top: 5px;">Kulüp Resmi Künyesi ve Yönetim Bilgileri</p>
+            </div>
+            <div class="count-badge">Toplam Üye: 124</div>
+        </header>
+
+        <div class="info-grid">
+            <!-- SOL KOLON -->
+            <div class="left-col">
+                <!-- Misyon & Vizyon -->
+                <div class="card">
+                    <div class="card-title">🎯 Misyon ve Vizyon</div>
+                    <p class="vision-text">
+                        <strong>Misyon:</strong> Öğrencilerin yazılım dünyasındaki güncel teknolojileri takip etmelerini sağlamak ve projeler geliştirerek teknik yetkinliklerini artırmak.<br><br>
+                        <strong>Vizyon:</strong> Üniversitemizi ulusal ve uluslararası yazılım yarışmalarında en üst seviyede temsil eden bir teknoloji ekosistemi haline gelmek.
+                    </p>
+                </div>
+
+                <!-- Üye Listesi -->
+                <div class="card">
+                    <div class="card-title">👥 Kayıtlı Üye Listesi</div>
+                    <table class="member-table">
+                        <thead>
+                            <tr>
+                                <th>Öğrenci No</th>
+                                <th>Ad Soyad</th>
+                                <th>Bölüm</th>
+                                <th>Kayıt Tarihi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>030422014</td><td>Hümeyra Kocaağaoğlu</td><td>Yazılım Müh.</td><td>12.10.2025</td></tr>
+                            <tr><td>030422055</td><td>Mert Yılmaz</td><td>Bilgisayar Müh.</td><td>15.10.2025</td></tr>
+                            <tr><td>030422089</td><td>Selin Demir</td><td>Yönetim Bilişim</td><td>20.10.2025</td></tr>
+                            <tr><td>030422102</td><td>Caner Akın</td><td>Yazılım Müh.</td><td>22.10.2025</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- SAĞ KOLON -->
+            <div class="right-col">
+                <!-- Yönetim Kurulu -->
+                <div class="card">
+                    <div class="card-title">👔 Yönetim Kurulu (Asil)</div>
+                    
+                    <div class="admin-item">
+                        <div>
+                            <div class="admin-name">Burak Çelik</div>
+                            <div class="admin-role">Kulüp Başkanı</div>
+                        </div>
+                    </div>
+
+                    <div class="admin-item">
+                        <div>
+                            <div class="admin-name">Ayşe Nur Yıldız</div>
+                            <div class="admin-role">Başkan Yardımcısı</div>
+                        </div>
+                    </div>
+
+                    <div class="admin-item">
+                        <div>
+                            <div class="admin-name">Emre Aydın</div>
+                            <div class="admin-role">Genel Sekreter</div>
+                        </div>
+                    </div>
+
+                    <div class="admin-item">
+                        <div>
+                            <div class="admin-name">Zeynep kısa</div>
+                            <div class="admin-role">Sayman</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- İletişim Bilgileri -->
+                <div class="card">
+                    <div class="card-title">📞 İletişim</div>
+                    <div style="font-size: 0.9rem; color: #475569;">
+                        <p><strong>E-posta:</strong> yazilimkulubu@uni.edu.tr</p>
+                        <p><strong>Oda:</strong> Kültür Merkezi - No: 204</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

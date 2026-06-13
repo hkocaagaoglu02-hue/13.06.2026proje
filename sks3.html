@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SKS | Detaylı İnceleme</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        /* MASTER SIDEBAR - %100 KORUNDU */
+        body { margin: 0; font-family: 'Inter', sans-serif; display: flex; min-height: 100vh; background-color: #f8f9fa; }
+        .sidebar { width: 280px; background-color: #0f172a; color: white; padding: 40px 20px; display: flex; flex-direction: column; border-right: 1px solid rgba(0,0,0,0.1); position: fixed; height: 100vh; box-sizing: border-box; }
+        .profile-section { text-align: center; margin-bottom: 40px; }
+        .profile-img { width: 70px; height: 70px; background: #10b981; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-weight: 800; }
+        .menu-item { display: flex; align-items: center; gap: 12px; padding: 15px; color: rgba(255,255,255,0.6); text-decoration: none; border-radius: 12px; margin-bottom: 8px; transition: 0.3s; }
+        .menu-item.active { background: rgba(16, 185, 129, 0.2); color: #34d399; font-weight: 600; }
+        .main-content { margin-left: 280px; flex: 1; padding: 50px 80px; background-color: #f8f9fa; }
+
+        /* İNCELEME ALANI STİLLERİ */
+        .back-link { text-decoration: none; color: #64748b; font-weight: 600; font-size: 0.9rem; display: inline-flex; align-items: center; margin-bottom: 25px; transition: 0.2s; }
+        .back-link:hover { color: #10b981; }
+
+        .app-container { display: grid; grid-template-columns: 1fr 350px; gap: 40px; align-items: start; }
+
+        /* SOL TARAF: İÇERİK */
+        .document-card { background: white; padding: 40px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.03); border: 1px solid #edf2f7; }
+        .doc-header { border-bottom: 2px solid #f8f9fa; padding-bottom: 20px; margin-bottom: 30px; }
+        .doc-header h2 { font-size: 1.8rem; color: #0f172a; margin: 0; font-weight: 800; }
+        .doc-header .badge { background: #ecfdf5; color: #059669; padding: 6px 14px; border-radius: 100px; font-size: 0.8rem; font-weight: 700; margin-top: 10px; display: inline-block; }
+
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 40px; }
+        .info-item label { display: block; color: #94a3b8; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+        .info-item span { display: block; color: #1e293b; font-weight: 600; font-size: 1rem; }
+
+        .description-box { background: #f8fafc; padding: 25px; border-radius: 16px; border-left: 4px solid #10b981; margin-bottom: 30px; }
+        .description-box h4 { margin: 0 0 12px 0; color: #0f172a; font-size: 1rem; }
+        .description-box p { color: #475569; line-height: 1.7; margin: 0; font-size: 0.95rem; }
+
+        /* SAĞ TARAF: HEYET AKSİYON PANELİ */
+        .action-sidebar { background: #1e293b; padding: 30px; border-radius: 24px; color: white; position: sticky; top: 40px; }
+        .action-sidebar h3 { font-size: 1.1rem; margin-top: 0; margin-bottom: 20px; color: #34d399; }
+        
+        .note-label { display: block; color: #94a3b8; font-size: 0.85rem; font-weight: 600; margin-bottom: 10px; }
+        .note-textarea { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 15px; font-family: inherit; font-size: 0.9rem; color: white; resize: none; box-sizing: border-box; margin-bottom: 20px; }
+        .note-textarea:focus { border-color: #34d399; outline: none; }
+
+        .btn-group { display: flex; flex-direction: column; gap: 12px; }
+        .primary-btn { background: #10b981; color: white; padding: 14px; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; }
+        .primary-btn:hover { background: #059669; transform: translateY(-2px); }
+        
+        .outline-btn { background: transparent; color: #cbd5e1; padding: 12px; border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; font-weight: 600; cursor: pointer; transition: 0.3s; }
+        .outline-btn:hover { background: rgba(255,255,255,0.05); border-color: white; }
+
+        /* =========================================
+           DİNAMİK BİLDİRİM (ALERT/TOAST) STİLLERİ
+           ========================================= */
+        .custom-alert {
+            position: fixed;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 16px 32px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 1000;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            opacity: 0;
+        }
+        .custom-alert.show {
+            top: 40px;
+            opacity: 1;
+        }
+        .alert-success { background-color: #059669; color: white; }
+        .alert-danger { background-color: #dc2626; color: white; }
+    </style>
+</head>
+<body>
+
+    <div id="notificationAlert" class="custom-alert"></div>
+
+    <aside class="sidebar">
+        <div class="profile-section">
+            <div class="profile-img">GT</div>
+            <h4>Gürhan Toktaş</h4>
+            <p style="font-size: 0.8rem; color: rgba(255,255,255,0.4);">SKS Daire Bşk.</p>
+        </div>
+        <nav class="menu">
+            <a href="sks1.html" class="menu-item">Genel Bakış</a>
+            <a href="sks2.html" class="menu-item active">Heyet Onayları</a>
+            <a href="sks4.html" class="menu-item">Mekan Yönetimi</a>
+            <a href="sks6.html" class="menu-item">Kulüp Yönetimi</a>
+            <a href="sks5.html" class="menu-item">Raporlar</a>
+        </nav>
+        <div class="sidebar-footer">
+            <button class="logout-btn">Güvenli Çıkış</button>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <a href="sks2.html" class="back-link">← Heyet Gündemine Dön</a>
+
+        <div class="app-container">
+            <div class="document-card">
+                <div class="doc-header">
+                    <h2>Kariyer Zirvesi '24</h2>
+                    <span class="badge">DANIŞMAN ONAYLI</span>
+                </div>
+
+                <div class="info-grid">
+                    <div class="info-item">
+                        <label>Başvuran Topluluk</label>
+                        <span>Yazılım Kulübü</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Akademik Danışman</label>
+                        <span>Dr. Gamze Türkmen</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Tarih & Saat</label>
+                        <span>24 Mayıs 2024 | 10:00</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Talep Edilen Mekan</label>
+                        <span>Merkezi Konferans Salonu</span>
+                    </div>
+                </div>
+
+                <div class="description-box">
+                    <h4>Etkinlik Özeti</h4>
+                    <p>Sektör liderleri ile öğrencileri buluşturan kariyer odaklı panel ve workshop serisi.</p>
+                </div>
+
+                <div class="info-item">
+                    <label>Danışman Onay Notu</label>
+                    <p style="color: #475569; font-style: italic;">"Etkinlik içeriği akademik takvime uygundur, salon tahsisi için heyete sunulması uygundur."</p>
+                </div>
+            </div>
+
+            <div class="action-sidebar">
+                <h3>Heyet Kararı</h3>
+                <label class="note-label">Resmi Karar Notu</label>
+                <textarea class="note-textarea" id="decisionNote" rows="5" placeholder="Heyet karar tutanağına eklenecek notlar..."></textarea>
+                
+                <div class="btn-group">
+                    <button class="primary-btn" onclick="processDecision('approve')">✓ HEYET ONAYI VER</button>
+                    <button class="outline-btn" onclick="processDecision('reject')">✕ REDDET</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function processDecision(actionType) {
+            const alertBox = document.getElementById('notificationAlert');
+            
+            // Mevcut sınıfları temizle
+            alertBox.className = "custom-alert";
+            
+            if (actionType === 'approve') {
+                alertBox.innerText = "✓ Kararınız kaydedildi. Etkinlik onaylandı!";
+                alertBox.classList.add('alert-success');
+            } else if (actionType === 'reject') {
+                alertBox.innerText = "✕ Kararınız kaydedildi. Başvuru reddedildi.";
+                alertBox.classList.add('alert-danger');
+            }
+            
+            // Bildirimi yukarıdan aşağı kaydırarak göster
+            alertBox.classList.add('show');
+            
+            // Butonları geçici olarak pasif yap (çift tıklamayı engellemek için)
+            document.querySelectorAll('.btn-group button').forEach(btn => btn.disabled = true);
+
+            // 2 saniye (2000 ms) sonra heyet onayları sayfasına geri döndür
+            setTimeout(() => {
+                window.location.href = "sks2.html";
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
