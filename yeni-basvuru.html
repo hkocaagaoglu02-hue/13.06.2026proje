@@ -65,13 +65,15 @@
         .section-header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
         .step-num { background: #152238; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; }
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .form-grid-three { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 20px; } /* Tarih ve Saat için yeni grid düzeni */
         .input-group { display: flex; flex-direction: column; gap: 8px; }
         .input-group label { font-weight: 600; color: #1a2a44; font-size: 0.9rem; }
-        .input-group input, .input-group select, .input-group textarea { padding: 12px; border-radius: 10px; border: 1px solid #e2e8f0; font-family: inherit; }
+        .input-group input, .input-group select, .input-group textarea { padding: 12px; border-radius: 10px; border: 1px solid #e2e8f0; font-family: inherit; color: #1a2a44; outline: none; }
+        .input-group input:focus, .input-group select:focus, .input-group textarea:focus { border-color: #152238; background-color: #fcfdfe; }
         .hidden-section { display: none; }
         .mt-20 { margin-top: 20px; }
 
-        /* Yeni Eklenen Ortak Etkinlik Soru Kutusu Stili (Tasarım Dilinizle Uyumlu) */
+        /* Ortak Etkinlik Soru Kutusu Stili */
         .question-box {
             background: rgba(21, 34, 56, 0.03);
             padding: 18px;
@@ -145,6 +147,21 @@
                         <option>Çalıştay</option>
                         <option>Sosyal Sorumluluk</option>
                     </select>
+                </div>
+            </div>
+
+            <div class="form-grid-three mt-20">
+                <div class="input-group">
+                    <label>Etkinlik Tarihi</label>
+                    <input type="date" id="eventDate" required>
+                </div>
+                <div class="input-group">
+                    <label>Başlangıç Saati</label>
+                    <input type="time" id="startTime" required>
+                </div>
+                <div class="input-group">
+                    <label>Bitiş Saati</label>
+                    <input type="time" id="endTime" required>
                 </div>
             </div>
             
@@ -250,6 +267,12 @@
 </main>
 
 <script>
+    // Sayfa açıldığında tarih alanına varsayılan olarak bugünü atasın (Kullanıcı deneyimi için)
+    document.addEventListener("DOMContentLoaded", function() {
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('eventDate').value = today;
+    });
+
     function togglePanel(id, value) {
         const panel = document.getElementById(id);
         const partnerSelect = document.getElementById('partner-clubs');
@@ -269,6 +292,16 @@
 
     function handleFormSubmit(event) {
         event.preventDefault(); 
+
+        const startTime = document.getElementById('startTime').value;
+        const endTime = document.getElementById('endTime').value;
+
+        // AKILLI KONTROL MEKANİZMASI (Jürinin takdir edeceği iş mantığı validasyonu)
+        if (startTime && endTime && startTime >= endTime) {
+            alert("Hata: Etkinlik bitiş saeti, başlangıç saatinden önce veya aynı saat olamaz!");
+            return;
+        }
+        
         window.location.href = 'basvuru-onay.html'; 
     }
 </script>

@@ -117,17 +117,33 @@
             transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer;
             box-shadow: 0 4px 6px rgba(0,0,0,0.01);
         }
-        .afis-item:hover { transform: translateY(-6px); box-shadow: 0 15px 30px rgba(21, 34, 56, 0.05); border-color: #152238; }
+        /* Görsel bütünlük için hover rengini logodaki kırmızıyla eşitledim */
+        .afis-item:hover { transform: translateY(-6px); box-shadow: 0 15px 30px rgba(255, 69, 58, 0.05); border-color: #ff453a; }
 
         .afis-img-placeholder {
             width: 100%; height: 160px;
             background: linear-gradient(135deg, #152238, #233654);
-            display: flex; align-items: center; justify-content: center;
-            color: rgba(255,255,255,0.25); font-weight: 800; font-size: 1.1rem; letter-spacing: 1px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            color: white; font-weight: 800; font-size: 1.2rem; letter-spacing: 1px;
+            text-align: center; padding: 15px;
         }
+
+        /* Afiş içi alt başlık stili */
+        .afis-img-subtitle {
+            font-size: 0.75rem; color: rgba(255,255,255,0.7); font-weight: 400; margin-top: 6px; letter-spacing: 0.5px;
+        }
+
         .afis-content { padding: 20px; }
         .afis-content h4 { margin: 0; color: #152238; font-size: 1.1rem; font-weight: 700; }
         .afis-content p { color: #64748b; font-size: 0.85rem; margin-top: 8px; font-weight: 500; }
+        
+        /* Yeni Eklenen Kategori Badge Stilleri */
+        .badge-container { display: flex; gap: 8px; margin-top: 12px; }
+        .badge {
+            font-size: 0.7rem; font-weight: 700; padding: 4px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .badge-tech { background-color: rgba(21, 34, 56, 0.06); color: #152238; }
+        .badge-culture { background-color: rgba(255, 69, 58, 0.08); color: #ff453a; }
 
         /* RESPONSIVE */
         @media (max-width: 950px) {
@@ -173,26 +189,44 @@
             <div class="afis-title">Kampüste Bu Ay</div>
 
             <div class="afis-item">
-                <div class="afis-img-placeholder">YBS ZİRVESİ '26</div>
+                <div class="afis-img-placeholder">
+                    YBS ZİRVESİ '26
+                    <div class="afis-img-subtitle">Geleceği Yönet: Veri Bilimi ve Yapay Zeka Paneli</div>
+                </div>
                 <div class="afis-content">
                     <h4>Bilişimde Kariyer Günleri</h4>
                     <p>📅 12 Nisan | 📍 Konferans Salonu A</p>
+                    <div class="badge-container">
+                        <span class="badge badge-tech">Teknoloji</span>
+                    </div>
                 </div>
             </div>
 
             <div class="afis-item">
-                <div class="afis-img-placeholder">BAHAR ŞENLİĞİ</div>
+                <div class="afis-img-placeholder" style="background: linear-gradient(135deg, #2c3e50, #ff453a);">
+                    BAHAR ŞENLİĞİ
+                    <div class="afis-img-subtitle">Geleneksel Dönem Sonu Açık Hava Konseri</div>
+                </div>
                 <div class="afis-content">
                     <h4>Açık Hava Konseri</h4>
                     <p>📅 20 Nisan | 📍 Kampüs Bahçesi</p>
+                    <div class="badge-container">
+                        <span class="badge badge-culture">Kültür & Sanat</span>
+                    </div>
                 </div>
             </div>
 
             <div class="afis-item">
-                <div class="afis-img-placeholder">TEKNOLOJİ WORKSHOP</div>
+                <div class="afis-img-placeholder">
+                    TEKNOLOJİ WORKSHOP
+                    <div class="afis-img-subtitle">Uygulamalı AI ve Gelecek Eğitimi</div>
+                </div>
                 <div class="afis-content">
                     <h4>AI ve Gelecek Eğitimi</h4>
                     <p>📅 28 Nisan | 📍 Lab-4</p>
+                    <div class="badge-container">
+                        <span class="badge badge-tech">Teknoloji</span>
+                    </div>
                 </div>
             </div>
         </aside>
